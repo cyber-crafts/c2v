@@ -1,0 +1,31 @@
+{
+  "linterOptions": {
+    "exclude": [
+      "./node_modules/.*",
+      "./__tests__/.*",
+      "./coverage/.*"
+    ]
+  },
+  "rules": {
+    "no-empty-interface": true,
+    "whitespace": [
+      true,
+      "check-type",
+      "check-decl",
+      "check-preblock",
+      "check-module"
+    ],
+    "space-within-parens": [
+      true
+    ],
+    "space-before-function-paren": [
+      true,
+      "always"
+    ],
+    "indent": [true,"spaces",2],
+    "semicolon": [
+      true,
+      "never"
+    ]
+  }
+}

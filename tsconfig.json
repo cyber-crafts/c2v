@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "declaration": true,
+    "types": [],
+    "lib": ["esnext","dom"],
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "module": "commonjs",
+    "target": "es5",
+    "allowSyntheticDefaultImports": true
+  },
+  "exclude": [
+    "./__tests__/",
+    "./lib/"
+  ]
+}
