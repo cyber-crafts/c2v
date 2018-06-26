@@ -7,7 +7,7 @@ export default class DateValidator extends ValidatorBase {
   public type: string = "date"
   private readonly format: DF
 
-  constructor (format: DF = DF.ISO8601, parent: ContainingType= null) {
+  constructor (format: DF = DF.ISO8601, parent: ContainingType = null) {
     super(parent)
     this.format = format
   }

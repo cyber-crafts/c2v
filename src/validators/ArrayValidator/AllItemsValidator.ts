@@ -1,8 +1,10 @@
 import { get, has } from "json-pointer"
-import { ContainingType, IValidationResult, IValidator } from "../../intefaces"
+import { ContainingType, DF, IValidationResult, IValidator } from "../../intefaces"
 import StringValidator from "../StringValidator"
 import NumberValidator from "../NumberValidator"
 import { combineValidationResults } from "../../utils"
+import BooleanValidator from "../BooleanValidator"
+import { DateValidator } from "../index"
 
 export default class AllItemsValidator {
   private readonly parent: ContainingType
@@ -12,16 +14,25 @@ export default class AllItemsValidator {
     this.parent = parent
   }
 
-  get string (): StringValidator {
-    const tv = new StringValidator(this.parent)
-    this.typeValidator = tv
-    return tv
+  setTypeValidator<T extends IValidator> (validator: T): T {
+    this.typeValidator = validator
+    return validator
+  }
+
+  string (): StringValidator {
+    return this.setTypeValidator(new StringValidator(this.parent))
   }
 
   number (integer: boolean = false): NumberValidator {
-    const nv = new NumberValidator(this.parent, integer)
-    this.typeValidator = nv
-    return nv
+    return this.setTypeValidator(new NumberValidator(integer, this.parent))
+  }
+
+  boolean (): BooleanValidator {
+    return this.setTypeValidator(new BooleanValidator(this.parent))
+  }
+
+  date (format: DF = DF.ISO8601): DateValidator {
+    return this.setTypeValidator(new DateValidator(format, this.parent))
   }
 
   validate (value: any, path: string): IValidationResult {

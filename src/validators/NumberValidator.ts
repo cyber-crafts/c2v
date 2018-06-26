@@ -4,7 +4,7 @@ import { number } from "../rules"
 
 export default class NumberValidator extends ValidatorBase {
 
-  constructor (parent: ContainingType, integer: boolean = false) {
+  constructor (integer: boolean = false, parent: ContainingType = null) {
     super(parent)
 
     // attaching type validator

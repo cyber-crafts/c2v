@@ -1,7 +1,6 @@
 import { ValidatorBase } from "../../ValidatorBase"
-import ObjectValidator from "../ObjectValidator"
 import AllItemsValidator from "./AllItemsValidator"
-import { ContainingType, IValidationResult } from "../../intefaces"
+import { ContainingType, IValidationResult, IValidator } from "../../intefaces"
 import { has } from "json-pointer"
 import { combineValidationResults } from "../../utils"
 import SingleItemValidator from "./SingleItemValidator"
@@ -29,7 +28,8 @@ export default class ArrayValidator extends ValidatorBase {
     return this
   }
 
-  allItems (): AllItemsValidator {
+  allItems (validator: IValidator = null): AllItemsValidator {
+    if (validator) this.allItemsValidator.setTypeValidator(validator)
     return this.allItemsValidator
   }
 
@@ -37,6 +37,19 @@ export default class ArrayValidator extends ValidatorBase {
     const siv = new SingleItemValidator(index, this)
     this.singleItemValidators.push(siv)
     return siv
+  }
+
+  items (validators: { [key: string]: IValidator }) {
+    Object.keys(validators).forEach(key => {
+      if (!isNaN(Number(key))) {
+        const siv = new SingleItemValidator(Number(key), this)
+        this.singleItemValidators.push(siv)
+        siv.setValidator(validators[key])
+      } else if (key === "*") {
+        this.allItemsValidator.setTypeValidator(validators[key])
+      }
+    })
+    return this
   }
 
   get type (): string {

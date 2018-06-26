@@ -28,6 +28,9 @@ export declare enum DF {
     Milliseconds = "milliseconds",
 }
 export declare type ContainingType = ObjectValidator | ArrayValidator;
+export interface IAttachable {
+    addEntryValidator<T extends IValidator>(name: string | number, validator: T): T;
+}
 export interface IValidationRuleData {
     name: string;
     validate: IValidationRule;

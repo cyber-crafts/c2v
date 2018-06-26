@@ -1,12 +1,13 @@
-import { ContainingType, IValidationResult } from "../../intefaces";
+import { ContainingType, IValidationResult, IValidator } from "../../intefaces";
 import StringValidator from "../StringValidator";
 import NumberValidator from "../NumberValidator";
 export default class SingleItemValidator {
     private readonly parent;
-    private index;
-    private typeValidator;
+    private readonly index;
+    typeValidator: IValidator;
     constructor(index: number, parent: ContainingType);
-    readonly string: StringValidator;
-    readonly number: NumberValidator;
+    setValidator(validator: IValidator): void;
+    string(): StringValidator;
+    number(integer?: boolean): NumberValidator;
     validate(value: any, path: string): IValidationResult;
 }

@@ -1,12 +1,12 @@
 import { ValidatorBase } from "../ValidatorBase"
-import { ContainingType, DF, IValidationError, IValidationMessage, IValidationResult, IValidator } from "../intefaces"
+import { ArrayValidator, BooleanValidator, DateValidator, NumberValidator, StringValidator } from "./"
+import { ContainingType, DF, IAttachable, IValidationResult, IValidator } from "../intefaces"
 import { get, has, set } from "json-pointer"
 import { combineValidationResults } from "../utils"
-import { ArrayValidator, BooleanValidator, DateValidator, NumberValidator, StringValidator } from "./"
 
 const getPath = (name: string): string => (name.charAt(0) === "/") ? name : "/" + name
 
-export default class ObjectValidator extends ValidatorBase {
+export default class ObjectValidator extends ValidatorBase implements IAttachable {
   protected readonly path: string
   private requiredProps: string[] = []
   private typeValidators: { [path: string]: IValidator } = {}
@@ -58,35 +58,40 @@ export default class ObjectValidator extends ValidatorBase {
     return this
   }
 
-  addTypeValidator<T extends IValidator> (name: string, validator: T): T {
+  addEntryValidator<T extends IValidator> (name: string, validator: T): T {
     const pointer = `/${name}`
     if (has(this.typeValidators, pointer)) return get(this.typeValidators, pointer)
     set(this.typeValidators, pointer, validator)
     return validator
   }
 
+  keys (validators: { [key: string]: IValidator }) {
+    Object.keys(validators).forEach(key => set(this.typeValidators, `/${key}`, validators[key]))
+    return this
+  }
+
   array (name: string): ArrayValidator {
-    return this.addTypeValidator<ArrayValidator>(name, new ArrayValidator(getPath(name), this))
+    return this.addEntryValidator<ArrayValidator>(name, new ArrayValidator(getPath(name), this))
   }
 
   object (name: string): ObjectValidator {
-    return this.addTypeValidator<ObjectValidator>(name, new ObjectValidator(getPath(name), this))
+    return this.addEntryValidator<ObjectValidator>(name, new ObjectValidator(getPath(name), this))
   }
 
   string (name: string): StringValidator {
-    return this.addTypeValidator<StringValidator>(name, new StringValidator(this))
+    return this.addEntryValidator(name, new StringValidator(this))
   }
 
-  date (name: string, format: DF = DF.ISO8601) {
-    return this.addTypeValidator<DateValidator>(name, new DateValidator(format, this))
+  date (name: string, format: DF = DF.ISO8601): DateValidator {
+    return this.addEntryValidator(name, new DateValidator(format, this))
   }
 
   number (name: string, integer: boolean = false): NumberValidator {
-    return this.addTypeValidator<NumberValidator>(name, new NumberValidator(this, integer))
+    return this.addEntryValidator<NumberValidator>(name, new NumberValidator(integer, this))
   }
 
   boolean (name: string): BooleanValidator {
-    return this.addTypeValidator <BooleanValidator>(name, new BooleanValidator(this))
+    return this.addEntryValidator <BooleanValidator>(name, new BooleanValidator(this))
   }
 
   // add validation rule requires
@@ -106,10 +111,10 @@ export default class ObjectValidator extends ValidatorBase {
     let propertiesResults: IValidationResult = {success: true, messages: [], errors: []}
     Object.keys(this.typeValidators).forEach(propertyName => {
       const path = [this.path, propertyName].join("/")
-      const propertyResult: IValidationResult =
-        this.typeValidators[propertyName]
-          .validate(value, path)
-      propertiesResults = combineValidationResults(propertiesResults, propertyResult)
+      if(has(value,path)){
+        const propertyResult: IValidationResult = this.typeValidators[propertyName].validate(value, path)
+        propertiesResults = combineValidationResults(propertiesResults, propertyResult)
+      }
     })
 
     return combineValidationResults(propertiesResults, superResult, result)

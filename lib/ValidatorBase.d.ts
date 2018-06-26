@@ -24,7 +24,7 @@ export declare abstract class ValidatorBase implements IValidator {
      * @returns IValidationResult
      * */
     validate(obj: object, path?: string): IValidationResult;
-    in(items: Array<any>): this;
+    in(...items: Array<any>): this;
     on(path: string): this;
     readonly _: ContainingType;
 }

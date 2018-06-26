@@ -69,7 +69,7 @@ export abstract class ValidatorBase implements IValidator {
     return result
   }
 
-  in (items: Array<any>) {
+  in (...items: Array<any>) {
     this.addValidator('in', (value: any, obj: any, path: string): boolean => {
       return !!items.find((item) => isEqual(value, item))
     }, {items})

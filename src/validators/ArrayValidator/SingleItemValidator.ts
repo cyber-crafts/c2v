@@ -1,4 +1,4 @@
-import { get, has } from "json-pointer"
+import { has } from "json-pointer"
 import { ContainingType, IValidationResult, IValidator } from "../../intefaces"
 import StringValidator from "../StringValidator"
 import NumberValidator from "../NumberValidator"
@@ -6,22 +6,26 @@ import { combineValidationResults } from "../../utils"
 
 export default class SingleItemValidator {
   private readonly parent: ContainingType
-  private index: number
-  private typeValidator: IValidator
+  private readonly index: number
+  public typeValidator: IValidator
 
   constructor (index: number, parent: ContainingType) {
     this.index = index
     this.parent = parent
   }
 
-  get string (): StringValidator {
+  setValidator (validator: IValidator) {
+    this.typeValidator = validator
+  }
+
+  string (): StringValidator {
     const tv = new StringValidator(this.parent)
     this.typeValidator = tv
     return tv
   }
 
-  get number (): NumberValidator {
-    const nv = new NumberValidator(this.parent)
+  number (integer: boolean = false): NumberValidator {
+    const nv = new NumberValidator(integer, this.parent)
     this.typeValidator = nv
     return nv
   }

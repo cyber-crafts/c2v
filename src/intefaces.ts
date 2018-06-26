@@ -37,6 +37,10 @@ export enum DF {
 
 export type ContainingType = ObjectValidator | ArrayValidator
 
+export interface IAttachable {
+  addEntryValidator<T extends IValidator> (name: string|number, validator: T): T
+}
+
 export interface IValidationRuleData {
   name: string
   validate: IValidationRule

@@ -1,4 +1,5 @@
 const { ObjectValidator, StringValidator } = require("../lib/validators");
+const c2v = require("../lib").default;
 
 describe("a full examples on how to use different validators", () => {
 
@@ -11,30 +12,21 @@ describe("a full examples on how to use different validators", () => {
   });
 
   it("should test", function () {
-    const registerForm = new ObjectValidator();
-
-    registerForm
-      .requires("username", "email", "gender", "password", "accepts")
-      .string("username").minLength(5).maxLength(32).matches(/^[a-z]$/)
-      ._.string("email").email()
-      ._.string("gender").in(["male", "female"])
-      ._.string("password").minLength(6).maxLength(32).confirmed()
-      ._.number("age", true).min(16).max(60)
-      ._.boolean("accepts").isTrue()
-      ._.array("hobbies").minItems(2).maxItems(64)
-      .allItems().string.in(["programming", "tennis", "reading", "gaming"])
-      ._.nth(0).string.maxLength(3);
-
-
-    const result = registerForm.validate({
-      "username": "",
-      "email": "",
-      "gender": "",
-      "password": "",
-      age: 15,
-      hobbies: ["wrong hobby 1", "wrong hobby 2"],
+    const address = c2v.obj().requires("address").keys({
+      "address": c2v.str().minLength(128),
+      "location": c2v.obj().requires("type", "coordinates").keys({
+        "type": c2v.str().in("point"),
+        "coordinates": c2v.arr().items({
+          0: c2v.num().min(-180).max(180),
+          1: c2v.num().min(-90).max(90),
+        }),
+      }),
     });
 
-    // console.log(JSON.stringify(result));
+    let result = address.validate({
+      address: "test",
+    });
+
+    console.log(JSON.stringify(result, null, 2));
   });
 });

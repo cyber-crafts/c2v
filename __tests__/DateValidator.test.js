@@ -8,6 +8,10 @@ beforeEach(() => {
 });
 
 describe("DateValidator is used to validate dates and dates representations in strings or integers", () => {
+  it("should have the right type name on its instances", () => {
+    expect(dv).toHaveProperty("type", "date");
+  });
+
   it("should succeed on before rule with valid value and fail otherwise", () => {
     dv.before("2018-06-01");
     expect(dv.validate("2018-06-02")).toHaveProperty("errors.0.rule", "date.before");
