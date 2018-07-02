@@ -1,5 +1,13 @@
 import { IValidationResult } from "./intefaces"
 
+export const wrap = <T> (value: T): Promise<T> => {
+  return Promise.resolve(value)
+}
+
+export const success = (): IValidationResult => {
+  return {success: true, errors: [], messages: []}
+}
+
 export const elevatePaths = (basePath: string, validationResult: IValidationResult): IValidationResult => {
   validationResult.errors.forEach(error => {
     error.dataPath = `${basePath}/${error.dataPath}`

@@ -1,15 +1,28 @@
-import ObjectValidator from "./validators/ObjectValidator"
-import ArrayValidator from "./validators/ArrayValidator"
+import { ObjectValidator, ArrayValidator } from "./typeValidators"
+import Context from "./Context"
 
-export interface IValidator {
-  type: string
-  _: ContainingType
-
-  validate (value: any, path: string): IValidationResult
+/**
+ * the function that validates targeted value
+ * @param value {any} the value under validation
+ * @param obj {any} the parent object that holds the value
+ * @param path {string} the path to the value on the parent object
+ * @param context {Context} state of validation to attach messages and errors
+ * @return {Promise}
+ * return type was left
+ * */
+export default interface IValidationRule {
+  (value: any, obj: any, path: string, context: Context): Promise<void>
 }
 
-export default interface IValidationRule {
-  (value: any, obj: any, path: string): boolean
+export interface IValidationError {
+  rule: string,     // the rule name that returned the error
+  dataPath: string, // the path (a json pointer) to the part of the data that was validated.
+  params: object,   // the object with the additional information about error that can be used to create custom error messages
+}
+
+export interface IValidationMessage {
+  code: string
+  params: object
 }
 
 export interface IValidationResult {
@@ -18,15 +31,12 @@ export interface IValidationResult {
   errors: IValidationError[]
 }
 
-export interface IValidationMessage {
-  code: string
-  params: object
-}
-
-export interface IValidationError {
-  rule: string,     // the rule name that returned the error
-  dataPath: string, // the path (a json pointer) to the part of the data that was validated.
-  params: object,   // the object with the additional information about error that can be used to create custom error messages
+/**
+ * @param promise {Promise<boolean> | boolean} usually what returned from IValidationRule
+ */
+export interface IValidationPromise {
+  promise: Promise<boolean>,
+  failError: IValidationError
 }
 
 export enum DF {
@@ -37,12 +47,9 @@ export enum DF {
 
 export type ContainingType = ObjectValidator | ArrayValidator
 
-export interface IAttachable {
-  addEntryValidator<T extends IValidator> (name: string|number, validator: T): T
-}
+export interface ITypeValidator {
+  type: string
+  _: ContainingType
 
-export interface IValidationRuleData {
-  name: string
-  validate: IValidationRule
-  params: object
+  validate (value: any, context: Context, path?: string): Promise<void>[]
 }

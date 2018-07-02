@@ -1,18 +1,12 @@
-import * as validators from "./validators";
-import { DF } from "./intefaces";
-declare const _default: {
-    str: () => validators.StringValidator;
-    int: () => validators.NumberValidator;
-    num: () => validators.NumberValidator;
-    date: (format?: DF) => validators.DateValidator;
-    bool: () => validators.BooleanValidator;
-    arr: () => validators.ArrayValidator;
-    obj: () => validators.ObjectValidator;
-    ArrayValidator: typeof validators.ArrayValidator;
-    ObjectValidator: typeof validators.ObjectValidator;
-    StringValidator: typeof validators.StringValidator;
-    DateValidator: typeof validators.DateValidator;
-    NumberValidator: typeof validators.NumberValidator;
-    BooleanValidator: typeof validators.BooleanValidator;
-};
-export default _default;
+import * as typeValidators from "./typeValidators";
+export { default as Context } from "./Context";
+export declare const validators: typeof typeValidators;
+export default class  {
+    static readonly str: typeValidators.StringValidator;
+    static readonly int: typeValidators.NumberValidator;
+    static readonly num: typeValidators.NumberValidator;
+    static readonly date: typeValidators.DateValidator;
+    static readonly bool: typeValidators.BooleanValidator;
+    static readonly arr: typeValidators.ArrayValidator;
+    static readonly obj: typeValidators.ObjectValidator;
+}

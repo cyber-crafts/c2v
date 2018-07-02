@@ -1,13 +1,35 @@
-import * as validators from "./validators"
-import { DF } from "./intefaces"
+import * as typeValidators from "./typeValidators"
 
-export default {
-  ...validators,
-  str: () => new validators.StringValidator(),
-  int: () => new validators.NumberValidator(true),
-  num: () => new validators.NumberValidator(),
-  date: (format: DF = DF.ISO8601) => new validators.DateValidator(format),
-  bool: () => new validators.BooleanValidator(),
-  arr: () => new validators.ArrayValidator(),
-  obj: () => new validators.ObjectValidator(),
+export { default as Context } from "./Context"
+
+export const validators = typeValidators
+
+export default class {
+  static get str () {
+    return new validators.StringValidator()
+  }
+
+  static get int () {
+    return new validators.NumberValidator(true)
+  }
+
+  static get num () {
+    return new validators.NumberValidator()
+  }
+
+  static get date () {
+    return new validators.DateValidator()
+  }
+
+  static get bool () {
+    return new validators.BooleanValidator()
+  }
+
+  static get arr () {
+    return new validators.ArrayValidator()
+  }
+
+  static get obj () {
+    return new validators.ObjectValidator()
+  }
 }
