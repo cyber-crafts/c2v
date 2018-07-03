@@ -3,10 +3,9 @@ import { ArrayValidator, BooleanValidator, DateValidator, NumberValidator, Strin
 import { ContainingType, DF, ITypeValidator } from "../intefaces";
 import Context from "../Context";
 export default class ObjectValidator extends BaseTypeValidator {
-    protected readonly path: string;
     private requiredProps;
     private typeValidators;
-    constructor(path?: string, parent?: ContainingType);
+    constructor(parent?: ContainingType);
     readonly type: string;
     requires(...properties: string[]): this;
     requiresWithAny(conditionalProps: string[] | string, assertionPaths: string[] | string): this;

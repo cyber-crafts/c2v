@@ -1,4 +1,8 @@
-# validator-ts
+# install
+not yet added to npm so you can add it to your package.json
+`"@cyber-crafts/validate": "git+ssh://git@github.com:cyber-crafts/validator.git"`
+
+# c2v
 validator-ts is an expressive validation library for nodejs and browsers
 
 ## validators

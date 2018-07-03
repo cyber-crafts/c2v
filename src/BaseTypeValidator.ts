@@ -32,7 +32,8 @@ export abstract class BaseTypeValidator implements ITypeValidator {
 
   in (...items: Array<any>) {
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (!!items.find((item) => isEqual(value, item))) {
+      if (!items.find((item) => isEqual(value, item))) {
+        console.log(value, items)
         context.addError(this.type + '.in', path, {items})
       }
     })

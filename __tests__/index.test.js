@@ -21,21 +21,26 @@ describe("a full examples on how to use different validators", () => {
   //
   it("should be able to validate nested objects", async () => {
     const schema = c2v.obj.requires("address").keys({
-      address: c2v.str.minLength(128),
+      address: c2v.str.minLength(3),
       location: c2v.obj.requires("type", "coordinates").keys({
         type: c2v.str.in("point"),
-        coordinates: c2v.arr.items({
+        coordinates: c2v.arr.minItems(2).maxItems(2).items({
           0: c2v.num.min(-180).max(180),
           1: c2v.num.min(-90).max(90),
         }),
       }),
     });
 
-    const address = { address: "test", location: "" };
 
-    const result = await Context.validate(schema, address);
+    let result = await Context.validate(schema, {
+      address: "test",
+      location: {
+        type: "typo",
+        coordinates: [181],
+      },
+    });
+
     expect(result).toHaveProperty("success", false);
-    expect(result).toHaveProperty("errors.0.rule", "string.minLength");
-
+    expect(result).toHaveProperty("errors.0.rule", "string.in");
   });
 });

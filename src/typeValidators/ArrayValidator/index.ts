@@ -16,14 +16,14 @@ export default class ArrayValidator extends BaseTypeValidator {
 
   minItems (limit: number) {
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (value.length >= limit) context.addError('array.minItems', path, {limit})
+      if (value.length < limit) context.addError('array.minItems', path, {limit})
     })
     return this
   }
 
   maxItems (limit: number) {
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (value.length <= limit) context.addError('array.maxItems', path, {limit})
+      if (value.length > limit) context.addError('array.maxItems', path, {limit})
     })
     return this
   }
@@ -65,6 +65,7 @@ export default class ArrayValidator extends BaseTypeValidator {
     }
 
     this.singleItemValidators.forEach(validator => {
+      console.log('siv => ', value, path)
       results = results.concat(validator.validate(value, path, context))
     })
 

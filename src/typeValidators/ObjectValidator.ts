@@ -7,13 +7,11 @@ import Context from "../Context"
 const getPath = (name: string): string => (name.charAt(0) === "/") ? name : "/" + name
 
 export default class ObjectValidator extends BaseTypeValidator {
-  protected readonly path: string
   private requiredProps: string[] = []
   private typeValidators: { [path: string]: ITypeValidator } = {}
 
-  constructor (path: string = "", parent: ContainingType = null) {
+  constructor (parent: ContainingType = null) {
     super(parent)
-    this.path = path
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (typeof value !== "object") context.addError('object', path)
     })
@@ -60,23 +58,23 @@ export default class ObjectValidator extends BaseTypeValidator {
   }
 
   addEntryValidator<T extends ITypeValidator> (name: string, validator: T): T {
-    const pointer = `/${name}`
+    const pointer = getPath(name)
     if (has(this.typeValidators, pointer)) return get(this.typeValidators, pointer)
     set(this.typeValidators, pointer, validator)
     return validator
   }
 
   keys (validators: { [key: string]: ITypeValidator }) {
-    Object.keys(validators).forEach(key => set(this.typeValidators, `/${key}`, validators[key]))
+    Object.keys(validators).forEach(key => this.addEntryValidator(key, validators[key]))
     return this
   }
 
   array (name: string): ArrayValidator {
-    return this.addEntryValidator<ArrayValidator>(name, new ArrayValidator(getPath(name), this))
+    return this.addEntryValidator(name, new ArrayValidator(getPath(name), this))
   }
 
   object (name: string): ObjectValidator {
-    return this.addEntryValidator<ObjectValidator>(name, new ObjectValidator(getPath(name), this))
+    return this.addEntryValidator(name, new ObjectValidator(this))
   }
 
   string (name: string): StringValidator {
@@ -88,11 +86,11 @@ export default class ObjectValidator extends BaseTypeValidator {
   }
 
   number (name: string, integer: boolean = false): NumberValidator {
-    return this.addEntryValidator<NumberValidator>(name, new NumberValidator(integer, this))
+    return this.addEntryValidator(name, new NumberValidator(integer, this))
   }
 
   boolean (name: string): BooleanValidator {
-    return this.addEntryValidator <BooleanValidator>(name, new BooleanValidator(this))
+    return this.addEntryValidator(name, new BooleanValidator(this))
   }
 
   // add validation rule requires
@@ -110,9 +108,10 @@ export default class ObjectValidator extends BaseTypeValidator {
 
     let propertiesResults: Promise<void>[] = []
     Object.keys(this.typeValidators).forEach(propertyName => {
-      const path = [this.path, propertyName].join("/")
-      if (has(value, path)) {
-        propertiesResults = propertiesResults.concat(this.typeValidators[propertyName].validate(value, context, path))
+      const typeValidator = this.typeValidators[propertyName]
+      const propertyPath = [path, propertyName].join("/")
+      if (has(value, propertyPath)) {
+        propertiesResults = propertiesResults.concat(typeValidator.validate(value, context, propertyPath))
       }
     })
 
