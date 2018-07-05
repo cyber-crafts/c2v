@@ -1,8 +1,9 @@
 import { BaseTypeValidator } from "../BaseTypeValidator"
 import { ArrayValidator, BooleanValidator, DateValidator, NumberValidator, StringValidator } from "./"
-import { ContainingType, DF, ITypeValidator } from "../intefaces"
+import { ContainingType, DF, ITypeValidator, default as IValidationRule, IValidationRuleWrapper } from "../intefaces"
 import { get, has, set } from "json-pointer"
 import Context from "../Context"
+import { merge } from "lodash"
 
 const getPath = (name: string): string => (name.charAt(0) === "/") ? name : "/" + name
 
@@ -22,7 +23,28 @@ export default class ObjectValidator extends BaseTypeValidator {
   }
 
   requires (...properties: string[]) {
-    this.requiredProps = properties
+    this.requiredProps = this.requiredProps.concat(properties)
+    return this
+  }
+
+  requiresIfAny (conditionalProps: string[] | string, validationRules: IValidationRuleWrapper[] | IValidationRuleWrapper) {
+    const conditionalProperties: string[] = (Array.isArray(conditionalProps)) ? conditionalProps : [conditionalProps]
+    const validationWrappers: IValidationRuleWrapper[] = (Array.isArray(validationRules)) ? validationRules : [validationRules]
+    conditionalProperties.forEach(conditionalProperty => {
+      this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+        for (let i = 0; i < validationWrappers.length; i++) {
+          const wrapper = validationWrappers[i]
+          if (has(obj, wrapper.path)) {
+            const _context = new Context()
+            await wrapper.validate(get(obj, wrapper.path), obj, wrapper.path, _context)
+            if (_context.isValid)
+              if (!has(value, `/${conditionalProperty}`)) {
+                context.addError('object.requiresIfAny', path, {conditionalProperty, assertionProperties: wrapper.path})
+              }
+          }
+        }
+      })
+    })
     return this
   }
 

@@ -31,14 +31,6 @@ export interface IValidationResult {
   errors: IValidationError[]
 }
 
-/**
- * @param promise {Promise<boolean> | boolean} usually what returned from IValidationRule
- */
-export interface IValidationPromise {
-  promise: Promise<boolean>,
-  failError: IValidationError
-}
-
 export enum DF {
   ISO8601 = "YYYY-MM-DD",
   Unix = "unix",
@@ -52,4 +44,9 @@ export interface ITypeValidator {
   _: ContainingType
 
   validate (value: any, context: Context, path?: string): Promise<void>[]
+}
+
+export interface IValidationRuleWrapper {
+  validate: IValidationRule
+  path: string
 }

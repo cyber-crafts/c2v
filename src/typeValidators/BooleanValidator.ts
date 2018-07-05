@@ -10,7 +10,7 @@ export default class BooleanValidator extends BaseTypeValidator {
     super(parent)
     // attaching type validator
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void>=>{
-      if(!boolean.boolean()(value)) context.addError('boolean',path,{})
+      if(!boolean.boolean()(value)) context.addError('boolean.boolean',path,{})
     })
   }
 

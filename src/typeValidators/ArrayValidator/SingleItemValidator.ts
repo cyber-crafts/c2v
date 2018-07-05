@@ -1,5 +1,5 @@
 import { has } from "json-pointer"
-import { ContainingType, IValidationResult, ITypeValidator } from "../../intefaces"
+import { ContainingType, ITypeValidator } from "../../intefaces"
 import StringValidator from "../StringValidator"
 import NumberValidator from "../NumberValidator"
 import  Context  from "../../Context"

@@ -28,9 +28,9 @@ export default class ArrayValidator extends BaseTypeValidator {
     return this
   }
 
-  allItems (validator: ITypeValidator = null): AllItemsValidator {
+  allItems (validator: ITypeValidator = null) {
     if (validator) this.allItemsValidator.setTypeValidator(validator)
-    return this.allItemsValidator
+    return this
   }
 
   nth (index: number): SingleItemValidator {
@@ -65,7 +65,6 @@ export default class ArrayValidator extends BaseTypeValidator {
     }
 
     this.singleItemValidators.forEach(validator => {
-      console.log('siv => ', value, path)
       results = results.concat(validator.validate(value, path, context))
     })
 
