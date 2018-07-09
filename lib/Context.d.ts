@@ -1,5 +1,4 @@
-import { IValidationError, IValidationMessage, IValidationResult } from "./intefaces";
-import { BaseTypeValidator } from "./BaseTypeValidator";
+import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from "./intefaces";
 export default class Context {
     private _state;
     private _container;
@@ -13,6 +12,6 @@ export default class Context {
     readonly errors: IValidationError[];
     readonly messages: IValidationMessage[];
     readonly state: IValidationResult;
-    validate(schema: BaseTypeValidator, obj: object): Promise<IValidationResult>;
-    static validate(schema: BaseTypeValidator, obj: object): Promise<IValidationResult>;
+    validate(schema: ITypeValidator, obj: object): Promise<IValidationResult>;
+    static validate(schema: ITypeValidator, obj: object): Promise<IValidationResult>;
 }

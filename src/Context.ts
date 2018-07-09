@@ -1,5 +1,4 @@
-import { IValidationError, IValidationMessage, IValidationResult } from "./intefaces"
-import { BaseTypeValidator } from "./BaseTypeValidator"
+import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from "./intefaces"
 
 export default class Context {
   private _state: IValidationResult = {success: true, messages: [], errors: []}
@@ -48,12 +47,12 @@ export default class Context {
     return this._state
   }
 
-  async validate (schema: BaseTypeValidator, obj: object): Promise<IValidationResult> {
+  async validate (schema: ITypeValidator, obj: object): Promise<IValidationResult> {
     await Promise.all(schema.validate(obj, this))
     return this.state
   }
 
-  static async validate (schema: BaseTypeValidator, obj: object): Promise<IValidationResult> {
+  static async validate (schema: ITypeValidator, obj: object): Promise<IValidationResult> {
     const c = new Context()
     await Promise.all(schema.validate(obj, c))
     return c.state
