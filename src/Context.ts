@@ -2,13 +2,13 @@ import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult
 
 export default class Context {
   private _state: IValidationResult = {success: true, messages: [], errors: []}
-  private _container: any
+  private static _container: any
 
-  bind (name: string, value: any) {
+  static bind (name: string, value: any) {
     this._container[name] = value
   }
 
-  get (name: string) {
+  static get (name: string) {
     return this._container[name]
   }
 

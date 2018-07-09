@@ -1,9 +1,9 @@
 import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from "./intefaces";
 export default class Context {
     private _state;
-    private _container;
-    bind(name: string, value: any): void;
-    get(name: string): any;
+    private static _container;
+    static bind(name: string, value: any): void;
+    static get(name: string): any;
     readonly isValid: boolean;
     private invalidate();
     addError(rule: string, dataPath: string, params?: object): void;
