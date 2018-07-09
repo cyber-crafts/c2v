@@ -37,7 +37,7 @@ export interface ITypeValidator {
     _: ContainingType;
     validate(value: any, context: Context, path?: string): Promise<void>[];
 }
-export interface IValidationRuleWrapper {
-    validate: IValidationRule;
+export interface IValidatorWrapper {
+    validator: ITypeValidator;
     path: string;
 }

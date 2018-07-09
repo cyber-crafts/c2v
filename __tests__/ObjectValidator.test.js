@@ -1,7 +1,7 @@
 const { Context } = require("../lib");
 
 const { validators } = require("../lib");
-const { ObjectValidator } = validators;
+const { ObjectValidator, StringValidator } = validators;
 
 let ov = new ObjectValidator();
 beforeEach(() => {
@@ -46,9 +46,11 @@ describe("object validator", () => {
       return Promise.resolve();
     };
 
+    const asserter = new StringValidator().in("dummies");
+
     ov.requiresIfAny(["cond1", "cond2"], {
       path: "/assert1",
-      validate: validationRule,
+      validator: asserter,
     });
 
     let r = await Context.validate(ov, { "conditional1": "dummy", "assert1": "dummies" });
