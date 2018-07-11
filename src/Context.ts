@@ -2,7 +2,7 @@ import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult
 
 export default class Context {
   private _state: IValidationResult = {success: true, messages: [], errors: []}
-  private static _container: any
+  private static _container: any = {}
 
   static bind (name: string, value: any) {
     this._container[name] = value
