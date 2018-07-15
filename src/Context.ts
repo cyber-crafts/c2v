@@ -10,7 +10,7 @@ export default class Context {
 
   static get (name: string | symbol) {
     if(!this._container.hasOwnProperty(name))
-      throw new Error(`identifier ${name} is NOT found in context`)
+      throw new Error(`identifier ${name.toString()} is NOT found in context`)
     return this._container[name]
   }
 
