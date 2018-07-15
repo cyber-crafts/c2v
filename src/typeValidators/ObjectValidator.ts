@@ -120,7 +120,7 @@ export default class ObjectValidator extends BaseTypeValidator {
 
     // checking required properties
     this.requiredProps.forEach(property => {
-      if (!has(value, `${path}/${property}`)) {
+      if (!has(value, `${path}/${property}`) || get(value, `${path}/${property}`) === null) {
         context.addError("object.requires", path, {property})
       }
     })
@@ -131,7 +131,7 @@ export default class ObjectValidator extends BaseTypeValidator {
     Object.keys(this.typeValidators).forEach(propertyName => {
       const typeValidator = this.typeValidators[propertyName]
       const propertyPath = [path, propertyName].join("/")
-      if (has(value, propertyPath)) {
+      if (has(value, propertyPath) && get(value, propertyPath) !== null) {
         propertiesResults = propertiesResults.concat(typeValidator.validate(value, context, propertyPath))
       }
     })
