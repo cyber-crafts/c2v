@@ -1,4 +1,5 @@
 import { BaseTypeValidator } from "../BaseTypeValidator"
+import { has, get, set } from "json-pointer"
 import { ContainingType, DF } from "../intefaces"
 import * as moment from "moment"
 import { date } from "../rules"
@@ -55,7 +56,12 @@ export default class DateValidator extends BaseTypeValidator {
     return this
   }
 
-  validate (value: any, context: Context, path: string = ""): Promise<void>[] {
-    return super.validate(this.parse(value), context, path)
+  validate (obj: any, context: Context, path: string = ""): Promise<void>[] {
+    if (path !== "") {
+      set(obj, path, this.parse(get(obj, path)))
+      return super.validate(obj, context, path)
+    } else {
+      return super.validate(this.parse(obj), context, path)
+    }
   }
 }

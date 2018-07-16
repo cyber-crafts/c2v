@@ -1,7 +1,9 @@
-const { Context } = require("../lib");
+const { default: c2v, Context } = require("../lib");
+const { DF } = require("../lib/intefaces");
 
 const { validators } = require("../lib");
 const { ObjectValidator, StringValidator } = validators;
+const moment = require("moment");
 
 let ov = new ObjectValidator();
 beforeEach(() => {
@@ -60,5 +62,22 @@ describe("object validator", () => {
     expect(r).toHaveProperty("success", true);
   });
 
+  it("should validate requiresIfAny a nested property", async () => {
+    const schema = c2v.obj.requires("birthdate")
+      .requiresIfAny("nationalId", {
+        path: "/birthdate",
+        validator: c2v.date.format(DF.Unix).furtherThanFromNow(-16, "years"),
+      }).keys({
+        birthdate: c2v.date.format(DF.Unix),
+        nationalId: c2v.str.length(14),
+      });
+
+    const result = await Context.validate(schema, {
+      birthdate: moment().subtract(16, "years").unix(),
+    });
+    expect(result).toHaveProperty("success", false);
+    expect(result).toHaveProperty("errors.0.rule", 'object.requiresIfAny');
+    expect(result).toHaveProperty("errors.0.params.conditionalProperty", 'nationalId');
+  });
 
 });

@@ -12,5 +12,5 @@ export default class DateValidator extends BaseTypeValidator {
     after(limit: string): this;
     closerThanFromNow(amount: number, unit: moment.unitOfTime.Base): this;
     furtherThanFromNow(amount: number, unit: moment.unitOfTime.Base): this;
-    validate(value: any, context: Context, path?: string): Promise<void>[];
+    validate(obj: any, context: Context, path?: string): Promise<void>[];
 }

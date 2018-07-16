@@ -15,5 +15,5 @@ export default {
       // checking the past check if given date is before the limit
       (value: moment.Moment): boolean => value.isBefore(moment().subtract(Math.abs(amount), unit)) :
       // checking the past check if given date is after the limit
-      (value: moment.Moment): boolean => value.isSameOrAfter(moment().add(amount, unit)),
+      (value: moment.Moment): boolean => value.isSameOrAfter(moment().add(amount, unit))
 }
