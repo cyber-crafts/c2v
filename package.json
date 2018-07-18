@@ -1,6 +1,6 @@
 {
   "name": "c2v",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "main": "./lib/index",
   "typings": "./lib/index",
   "license": "MIT",
