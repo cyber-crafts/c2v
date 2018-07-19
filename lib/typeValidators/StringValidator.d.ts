@@ -1,10 +1,7 @@
 import { BaseTypeValidator } from "../BaseTypeValidator";
+import { ContainingType } from "../intefaces";
 export default class StringValidator extends BaseTypeValidator {
-    /**
-     * checks if
-     * @param limit {number}
-     * @return StringValidator
-     * */
+    constructor(parent?: ContainingType);
     length(limit: number): this;
     minLength(limit: number): this;
     maxLength(limit: number): this;

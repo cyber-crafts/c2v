@@ -217,6 +217,6 @@ c2v.date.furtherThanFromNow(7, "days")
 c2v.date.furtherThanFromNow(-7, "days")
 ```
 
-// to be coming
+// upcoming
 # context
 # extending validators

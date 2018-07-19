@@ -13,7 +13,7 @@ export default class ObjectValidator extends BaseTypeValidator {
   constructor (parent: ContainingType = null) {
     super(parent)
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (typeof value !== "object") context.addError('object', path)
+      if (typeof value !== "object") context.addError('object.object', path)
     })
   }
 

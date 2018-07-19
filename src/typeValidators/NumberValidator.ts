@@ -10,9 +10,13 @@ export default class NumberValidator extends BaseTypeValidator {
 
     // attaching type validator
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (!number.number()(value)) context.addError('number', path, {})
+      if (!number.number()(value)) context.addError('number.number', path, {})
       if (integer && !number.integer()(value)) context.addError('number.integer', path, {})
     })
+  }
+
+  get type (): string {
+    return "number"
   }
 
   min (min: number, exclusive: boolean = false) {
@@ -31,12 +35,8 @@ export default class NumberValidator extends BaseTypeValidator {
 
   multipleOf (modulus: number) {
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (!number.multipleOf(modulus)) context.addError('number.multipleOf', path, {modulus})
+      if (!number.multipleOf(modulus)(value)) context.addError('number.multipleOf', path, {modulus})
     })
     return this
-  }
-
-  get type (): string {
-    return "number"
   }
 }

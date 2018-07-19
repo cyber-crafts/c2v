@@ -1,14 +1,17 @@
 import { BaseTypeValidator } from "../BaseTypeValidator"
+import { ContainingType } from "../intefaces"
 import { string } from "../rules"
 import Context from "../Context"
 
 export default class StringValidator extends BaseTypeValidator {
 
-  /**
-   * checks if
-   * @param limit {number}
-   * @return StringValidator
-   * */
+  constructor (parent: ContainingType = null) {
+    super(parent)
+    this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+      if (typeof value !== "string") context.addError('string.string', path)
+    })
+  }
+
   length (limit: number) {
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!string.length(limit)(value))
