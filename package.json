@@ -1,6 +1,21 @@
 {
   "name": "c2v",
-  "version": "0.0.10",
+  "version": "0.9.1",
+  "keywords": [
+    "validation",
+    "async",
+    "intuitive",
+    "conditional",
+    "typescript",
+    "javascript",
+    "expressive",
+    "cyber crafts"
+  ],
+  "description": "modular, extensible, intuitive and expressive - javascript validator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyber-crafts/validate.git"
+  },
   "main": "./lib/index",
   "typings": "./lib/index",
   "license": "MIT",
