@@ -75,19 +75,14 @@ umm looks good, but not very real world scenario yet, what if we want to require
 
 ### `requiresWithAny`
 require the existence of **conditional fields** if any of the **assertion fields** exist
-
-so let's assume that if this employee has children then the number of children is required
 ```javascript
-c2v.obj.requires('firstName', 'lastName', 'email', 'birthdate')
-    .requiresWithAny(["numOfChildren"],["hasChildren"]) // requires numOfChildren if hasChildren is present on object
-    // .requiresWithAny("numOfChildren","hasChildren")  << this is also valid
+// on this example "prop1" and "prop2" will be required if "assertionProp1" **or** "assertionProp2" exist on object
+c2v.obj.requiresWithAny(["prop1","prop2"],["assertionProp1","assertionProp2"])
     .keys({
-      firstName: c2v.str.minLength(2).maxLength(32),
-      lastName: c2v.str.minLength(8).maxLength(64),
-      email: c2v.str.email(),
-      birthdate: c2v.date.format(DF.Unix),
-      hasChildren: c2v.bool,
-      numOfChildren: c2v.int
+      requiredProp1: c2v...,
+      requiredProp2: c2v...,
+      assertionProp1: c2v...,
+      assertionProp2: c2v...
     })
 ```
 
@@ -95,6 +90,16 @@ c2v.obj.requires('firstName', 'lastName', 'email', 'birthdate')
 same as previous rule but the difference is that `requiresWithAll` will require **conditional fields** only if
 all **assertion fields** are present on object while `requiresWithAny` will require them if any of the **assertion fields**
 is present on the object.
+```javascript
+// on this example "prop1" and "prop2" will only be required when "assertionProp1" and "assertionProp2" already exist on object
+c2v.obj.requiresWithAll(["prop1","prop2"],["assertionProp1","assertionProp2"])
+    .keys({
+      requiredProp1: c2v...,
+      requiredProp2: c2v...,
+      assertionProp1: c2v...,
+      assertionProp2: c2v...
+    })
+```
 
 ### `requiresIfAny`
 this is a more advanced use case this will require centain properties on current object if a condition is satisfied, so for the sake of example let's assume that we need the national Id of the employee if he is older than 45 years
@@ -178,7 +183,7 @@ asserts that the field under validation is more than or less than a certain valu
 ```javascript
 c2v.num.min(128).max(256) // 128 is valid and 256 is valid
 ```
-both rules accept a second parameter `exclusive` if true then the validated value 
+both rules accept a second parameter `exclusive` if true then the validated value
 must not equal the `min` or the `max` limit to be valid
 ```javascript
 c2v.num.min(128, true).max(256) // 128 is invalid
@@ -195,7 +200,7 @@ asserts that the field under validation is represented in a known format
 
 *if not set this defaults to `DF.ISO8601` which is `YYYY-MM-DD`*
 ### `before` and `after`
-asserts that the field under validation is before or after a centain date respectively 
+asserts that the field under validation is before or after a centain date respectively
 ```javascript
 // validates if the value is a date after "2018-07-01" before "2018-08-01"
 c2v.date.after("2018-07-01").before("2018-08-01");
@@ -217,6 +222,27 @@ c2v.date.furtherThanFromNow(7, "days")
 c2v.date.furtherThanFromNow(-7, "days")
 ```
 
+# reusable validators
+we can reuse already existing validators on other validators like following
+
+let's assume that we need to create a validator to validate GPS coordinates
+```javascript
+// coordinates.js
+export default c2v.arr.minItems(2).maxItems(2).items({
+  0: c2v.num.min(-180).max(180),
+  1: c2v.num.min(-90).max(90),
+});
+
+// on other file
+import coordinates from './coordinates'
+
+const warehouseSchema = c2v.obj.keys({
+    ...
+    location: coordinates
+    ...
+})
+```
+
 // upcoming
 # context
-# extending validators
+# custom validators

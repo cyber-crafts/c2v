@@ -1,8 +1,9 @@
 import * as typeValidators from "./typeValidators"
+import * as interfaces from "./intefaces"
 
 export { default as Context } from "./Context"
-
 export const validators = typeValidators
+export { interfaces }
 
 export default class {
   static get str () {

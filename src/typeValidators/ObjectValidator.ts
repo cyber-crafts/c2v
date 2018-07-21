@@ -67,10 +67,11 @@ export default class ObjectValidator extends BaseTypeValidator {
 
     conditionalProperties.forEach(conditionalProperty => {
       this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-        for (let i = 0; i < assertionProperties.length; i++)
+        for (let i = 0; i < assertionProperties.length; i++){
           if (!has(obj, assertionProperties[i])) return
+        }
 
-        if (value.hasOwnProperty(conditionalProperty))
+        if (!value.hasOwnProperty(conditionalProperty))
           context.addError('object.requiresWithAll', path, {conditionalProperty, assertionProperties})
       })
     })

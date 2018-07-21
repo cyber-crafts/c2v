@@ -10,6 +10,7 @@ beforeEach(() => {
   ov = new ObjectValidator();
 });
 
+
 describe("object validator", () => {
   it("should return errors on required but not supplied props", async () => {
     ov.requires("t", "s");
@@ -41,18 +42,19 @@ describe("object validator", () => {
     expect(r).toHaveProperty("errors.0.rule", "object.requiresWithAny");
   });
 
+  it("should return success validation if all props exists for requireWithAll and fail otherwise", async () => {
+    ov.requiresWithAll(["cond1", "cond2"], ["/assert1", "/assert2"]);
+    let r = await Context.validate(ov, { "assert1": "dummy" });
+    expect(r).toHaveProperty("success", true);
+
+    r = await Context.validate(ov, { "assert1": "dummy", "assert2": "yummy" });
+    expect(r).toHaveProperty("success", false);
+  });
+
   it("should return success validation if all props exists for requireIfAny", async () => {
-    const validationRule = (value, obj, path, context) => {
-      if (value !== "dummies")
-        context.addError("test.dummy", path);
-      return Promise.resolve();
-    };
-
-    const asserter = new StringValidator().in("dummies");
-
     ov.requiresIfAny(["cond1", "cond2"], {
       path: "/assert1",
-      validator: asserter,
+      validator: new StringValidator().in("dummies"),
     });
 
     let r = await Context.validate(ov, { "conditional1": "dummy", "assert1": "dummies" });
@@ -76,8 +78,8 @@ describe("object validator", () => {
       birthdate: moment().subtract(16, "years").unix(),
     });
     expect(result).toHaveProperty("success", false);
-    expect(result).toHaveProperty("errors.0.rule", 'object.requiresIfAny');
-    expect(result).toHaveProperty("errors.0.params.conditionalProperty", 'nationalId');
+    expect(result).toHaveProperty("errors.0.rule", "object.requiresIfAny");
+    expect(result).toHaveProperty("errors.0.params.conditionalProperty", "nationalId");
   });
 
 });
