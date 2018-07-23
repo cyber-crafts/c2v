@@ -229,9 +229,11 @@ let's assume that we need to create a validator to validate GPS coordinates
 ```javascript
 // coordinates.js
 export default c2v.arr.minItems(2).maxItems(2).items({
-  0: c2v.num.min(-180).max(180),
-  1: c2v.num.min(-90).max(90),
+  0: c2v.num.min(-180).max(180),    // longitude
+  1: c2v.num.min(-90).max(90),      // latitude
 });
+// this will require an array of 2 items like: [135, 45]
+
 
 // on other file
 import coordinates from './coordinates'

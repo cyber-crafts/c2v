@@ -21,14 +21,14 @@ export default class NumberValidator extends BaseTypeValidator {
 
   min (min: number, exclusive: boolean = false) {
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (!number.min(min, exclusive)(value)) context.addError('number.min', path, {exclusive})
+      if (!number.min(min, exclusive)(value)) context.addError('number.min', path, {limit: min, exclusive})
     })
     return this
   }
 
   max (max: number, exclusive: boolean = false) {
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (!number.max(max, exclusive)(value)) context.addError('number.max', path, {exclusive})
+      if (!number.max(max, exclusive)(value)) context.addError('number.max', path, {limit: max, exclusive})
     })
     return this
   }
