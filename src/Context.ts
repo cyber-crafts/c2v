@@ -1,15 +1,26 @@
-import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from "./intefaces"
+import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from "./contracts"
+import { merge } from "lodash"
 
 export default class Context {
-  private _state: IValidationResult = {success: true, messages: [], errors: []}
   private static _container: any = {}
+  private _state: IValidationResult = {success: true, messages: [], errors: []}
+  private _data: any = {}
+
+  public setData (data: any): this {
+    this._data = merge(data, this.getData())
+    return this
+  }
+
+  public getData () {
+    return this._data
+  }
 
   static bind (name: string | symbol, value: any) {
     this._container[name] = value
   }
 
   static get (name: string | symbol) {
-    if(!this._container.hasOwnProperty(name))
+    if (!this._container.hasOwnProperty(name))
       throw new Error(`identifier ${name.toString()} is NOT found in context`)
     return this._container[name]
   }
@@ -49,14 +60,14 @@ export default class Context {
     return this._state
   }
 
-  async validate (schema: ITypeValidator, obj: object): Promise<IValidationResult> {
+  async validate (schema: ITypeValidator, obj: object, data?: any): Promise<IValidationResult> {
+    this.setData(data)
     await Promise.all(schema.validate(obj, this))
     return this.state
   }
 
-  static async validate (schema: ITypeValidator, obj: object): Promise<IValidationResult> {
+  static async validate (schema: ITypeValidator, obj: object, data?: any): Promise<IValidationResult> {
     const c = new Context()
-    await Promise.all(schema.validate(obj, c))
-    return c.state
+    return await c.validate(schema, obj, data)
   }
 }

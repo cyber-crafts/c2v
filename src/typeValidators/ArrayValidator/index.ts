@@ -1,6 +1,6 @@
 import { BaseTypeValidator } from "../../BaseTypeValidator"
 import AllItemsValidator from "./AllItemsValidator"
-import { ContainingType, ITypeValidator } from "../../intefaces"
+import { ITypeValidator } from "../../contracts"
 import { has } from "json-pointer"
 import SingleItemValidator from "./SingleItemValidator"
 import Context from "../../Context"
@@ -9,9 +9,9 @@ export default class ArrayValidator extends BaseTypeValidator {
   private readonly allItemsValidator: AllItemsValidator
   private readonly singleItemValidators: SingleItemValidator[] = []
 
-  constructor (path: string = "", parent: ContainingType = null) {
-    super(parent)
-    this.allItemsValidator = new AllItemsValidator(this)
+  constructor (path: string = "") {
+    super()
+    this.allItemsValidator = new AllItemsValidator()
   }
 
   minItems (limit: number) {
@@ -33,16 +33,10 @@ export default class ArrayValidator extends BaseTypeValidator {
     return this
   }
 
-  nth (index: number): SingleItemValidator {
-    const siv = new SingleItemValidator(index, this)
-    this.singleItemValidators.push(siv)
-    return siv
-  }
-
   items (validators: { [key: string]: ITypeValidator }) {
     Object.keys(validators).forEach(key => {
       if (!isNaN(Number(key))) {
-        const siv = new SingleItemValidator(Number(key), this)
+        const siv = new SingleItemValidator(Number(key))
         this.singleItemValidators.push(siv)
         siv.setValidator(validators[key])
       } else if (key === "*") {

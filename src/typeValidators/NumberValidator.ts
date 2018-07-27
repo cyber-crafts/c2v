@@ -1,13 +1,11 @@
 import { BaseTypeValidator } from "../BaseTypeValidator"
-import { ContainingType } from "../intefaces"
 import { number } from "../rules"
 import Context from "../Context"
 
 export default class NumberValidator extends BaseTypeValidator {
 
-  constructor (integer: boolean = false, parent: ContainingType = null) {
-    super(parent)
-
+  constructor (integer: boolean = false) {
+    super()
     // attaching type validator
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!number.number()(value)) context.addError('number.number', path, {})

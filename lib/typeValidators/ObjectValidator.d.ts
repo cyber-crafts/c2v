@@ -1,11 +1,10 @@
 import { BaseTypeValidator } from "../BaseTypeValidator";
-import { ArrayValidator, BooleanValidator, DateValidator, NumberValidator, StringValidator } from "./";
-import { ContainingType, DF, ITypeValidator, IValidatorWrapper } from "../intefaces";
+import { ITypeValidator, IValidatorWrapper } from "../contracts";
 import Context from "../Context";
 export default class ObjectValidator extends BaseTypeValidator {
     private requiredProps;
     private typeValidators;
-    constructor(parent?: ContainingType);
+    constructor();
     readonly type: string;
     requires(...properties: string[]): this;
     requiresIfAny(conditionalProps: string[] | string, validationRules: IValidatorWrapper[] | IValidatorWrapper): this;
@@ -15,11 +14,5 @@ export default class ObjectValidator extends BaseTypeValidator {
     keys(validators: {
         [key: string]: ITypeValidator;
     }): this;
-    array(name: string): ArrayValidator;
-    object(name: string): ObjectValidator;
-    string(name: string): StringValidator;
-    date(name: string, format?: DF): DateValidator;
-    number(name: string, integer?: boolean): NumberValidator;
-    boolean(name: string): BooleanValidator;
-    validate(value: any, context: Context, path?: string): Promise<void>[];
+    validate(obj: any, context: Context, path?: string): Promise<void>[];
 }

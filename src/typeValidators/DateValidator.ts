@@ -1,6 +1,6 @@
 import { BaseTypeValidator } from "../BaseTypeValidator"
 import { has, get, set } from "json-pointer"
-import { ContainingType, DF } from "../intefaces"
+import { DF } from "../contracts"
 import * as moment from "moment"
 import { date } from "../rules"
 import Context from "../Context"
@@ -9,8 +9,8 @@ export default class DateValidator extends BaseTypeValidator {
   public type: string = "date"
   private _format: DF
 
-  constructor (format: DF = DF.ISO8601, parent: ContainingType = null) {
-    super(parent)
+  constructor (format: DF = DF.ISO8601) {
+    super()
     this._format = format
   }
 

@@ -1,9 +1,9 @@
 import * as typeValidators from "./typeValidators"
-import * as interfaces from "./intefaces"
+import * as contracts from "./contracts"
 
 export { default as Context } from "./Context"
 export const validators = typeValidators
-export { interfaces }
+export { contracts }
 
 export default class {
   static get str () {

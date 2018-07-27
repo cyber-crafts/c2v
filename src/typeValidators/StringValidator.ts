@@ -1,12 +1,11 @@
 import { BaseTypeValidator } from "../BaseTypeValidator"
-import { ContainingType } from "../intefaces"
 import { string } from "../rules"
 import Context from "../Context"
 
 export default class StringValidator extends BaseTypeValidator {
 
-  constructor (parent: ContainingType = null) {
-    super(parent)
+  constructor () {
+    super()
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (typeof value !== "string") context.addError('string.string', path)
     })
@@ -43,6 +42,7 @@ export default class StringValidator extends BaseTypeValidator {
     })
     return this
   }
+
 
   url () {
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {

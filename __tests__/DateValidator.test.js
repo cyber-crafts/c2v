@@ -1,4 +1,4 @@
-const { DF } = require("../lib/intefaces");
+const { DF } = require("../lib/contracts");
 const { DateValidator } = require("../lib/typeValidators");
 const { Context } = require("../lib");
 const moment = require("moment");

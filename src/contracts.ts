@@ -1,4 +1,3 @@
-import { ObjectValidator, ArrayValidator } from "./typeValidators"
 import Context from "./Context"
 
 /**
@@ -37,12 +36,8 @@ export enum DF {
   Milliseconds = "milliseconds",
 }
 
-export type ContainingType = ObjectValidator | ArrayValidator
-
 export interface ITypeValidator {
   type: string
-  _: ContainingType
-
   validate (value: any, context: Context, path?: string): Promise<void>[]
 }
 

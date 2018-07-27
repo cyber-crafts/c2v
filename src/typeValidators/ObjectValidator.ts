@@ -1,8 +1,8 @@
 import { BaseTypeValidator } from "../BaseTypeValidator"
-import { ArrayValidator, BooleanValidator, DateValidator, NumberValidator, StringValidator } from "./"
-import { ContainingType, DF, ITypeValidator, IValidatorWrapper } from "../intefaces"
+import { ITypeValidator, IValidatorWrapper } from "../contracts"
 import { get, has, set } from "json-pointer"
 import Context from "../Context"
+import { sanitizePath } from "../utils"
 
 const getPath = (name: string): string => (name.charAt(0) === "/") ? name : "/" + name
 
@@ -10,8 +10,8 @@ export default class ObjectValidator extends BaseTypeValidator {
   private requiredProps: string[] = []
   private typeValidators: { [path: string]: ITypeValidator } = {}
 
-  constructor (parent: ContainingType = null) {
-    super(parent)
+  constructor () {
+    super()
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (typeof value !== "object") context.addError('object.object', path)
     })
@@ -33,14 +33,33 @@ export default class ObjectValidator extends BaseTypeValidator {
       this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         for (let i = 0; i < validationWrappers.length; i++) {
           const wrapper = validationWrappers[i]
-          if (has(obj, wrapper.path)) {
-            const _context = new Context()
-            await Promise.all(wrapper.validator.validate(obj, _context, wrapper.path))
+
+          let conditionalObject: any = undefined
+          let isDataValidation = false
+          if (wrapper.path.substr(0, 1) === "$") {
+            conditionalObject = context.getData()
+            isDataValidation = true
+          } else {
+            conditionalObject = obj
+          }
+
+          if (has(conditionalObject, sanitizePath(wrapper.path))) {
+            const _context = new Context().setData(context.getData())
+            await Promise.all(wrapper.validator.validate(conditionalObject, _context, sanitizePath(wrapper.path)))
+            // if context is clean then the `conditionalProperty` should exist
             if (_context.isValid)
               if (!has(value, `/${conditionalProperty}`)) {
-                context.addError('object.requiresIfAny', path, {conditionalProperty, assertionProperties: wrapper.path})
+                const errorParams: any = {
+                  conditionalProperty,
+                  assertionProperties: wrapper.path,
+                }
+                if (isDataValidation) {
+                  errorParams.data = context.getData()
+                }
+                context.addError('object.requiresIfAny', path, errorParams)
               }
           }
+
         }
       })
     })
@@ -67,7 +86,7 @@ export default class ObjectValidator extends BaseTypeValidator {
 
     conditionalProperties.forEach(conditionalProperty => {
       this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-        for (let i = 0; i < assertionProperties.length; i++){
+        for (let i = 0; i < assertionProperties.length; i++) {
           if (!has(obj, assertionProperties[i])) return
         }
 
@@ -91,49 +110,25 @@ export default class ObjectValidator extends BaseTypeValidator {
     return this
   }
 
-  array (name: string): ArrayValidator {
-    return this.addEntryValidator(name, new ArrayValidator(getPath(name), this))
-  }
-
-  object (name: string): ObjectValidator {
-    return this.addEntryValidator(name, new ObjectValidator(this))
-  }
-
-  string (name: string): StringValidator {
-    return this.addEntryValidator(name, new StringValidator(this))
-  }
-
-  date (name: string, format: DF = DF.ISO8601): DateValidator {
-    return this.addEntryValidator(name, new DateValidator(format, this))
-  }
-
-  number (name: string, integer: boolean = false): NumberValidator {
-    return this.addEntryValidator(name, new NumberValidator(integer, this))
-  }
-
-  boolean (name: string): BooleanValidator {
-    return this.addEntryValidator(name, new BooleanValidator(this))
-  }
-
   // add validation rule requires
-  validate (value: any, context: Context, path: string = ""): Promise<void>[] {
+  validate (obj: any, context: Context, path: string = ""): Promise<void>[] {
     let results: Promise<void>[] = []
 
     // checking required properties
     this.requiredProps.forEach(property => {
-      if (!has(value, `${path}/${property}`) || get(value, `${path}/${property}`) === null) {
+      if (!has(obj, `${path}/${property}`) || get(obj, `${path}/${property}`) === null) {
         context.addError("object.requires", path, {property})
       }
     })
 
-    const superResult = super.validate(value, context, path)
+    const superResult = super.validate(obj, context, path)
 
     let propertiesResults: Promise<void>[] = []
     Object.keys(this.typeValidators).forEach(propertyName => {
       const typeValidator = this.typeValidators[propertyName]
       const propertyPath = [path, propertyName].join("/")
-      if (has(value, propertyPath) && get(value, propertyPath) !== null) {
-        propertiesResults = propertiesResults.concat(typeValidator.validate(value, context, propertyPath))
+      if (has(obj, propertyPath) && get(obj, propertyPath) !== null) {
+        propertiesResults = propertiesResults.concat(typeValidator.validate(obj, context, propertyPath))
       }
     })
 

@@ -1,10 +1,8 @@
-import { default as IValidationRule, ContainingType, ITypeValidator } from "./intefaces";
+import { default as IValidationRule, ITypeValidator } from "./contracts";
 import Context from "./Context";
 export declare abstract class BaseTypeValidator implements ITypeValidator {
     protected validationRules: IValidationRule[];
-    protected readonly parent: ContainingType;
-    readonly abstract type: string;
-    constructor(parent?: ContainingType);
+    abstract readonly type: string;
     /**
      * adds a new validator to the existing validators array
      * @param validator {IValidationRule} the rule name
@@ -22,8 +20,8 @@ export declare abstract class BaseTypeValidator implements ITypeValidator {
      * @param obj {object} the whole object under validation
      * @param path {string = ""} the path to the property under validation
      * @param context
+     * @param data a parameter that provides additional data to be used for validation
      * @returns IValidationResult
      * */
     validate(obj: object, context: Context, path?: string): Promise<void>[];
-    readonly _: ContainingType;
 }

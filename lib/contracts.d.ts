@@ -1,4 +1,3 @@
-import { ObjectValidator, ArrayValidator } from "./typeValidators";
 import Context from "./Context";
 /**
  * the function that validates targeted value
@@ -29,12 +28,10 @@ export interface IValidationResult {
 export declare enum DF {
     ISO8601 = "YYYY-MM-DD",
     Unix = "unix",
-    Milliseconds = "milliseconds",
+    Milliseconds = "milliseconds"
 }
-export declare type ContainingType = ObjectValidator | ArrayValidator;
 export interface ITypeValidator {
     type: string;
-    _: ContainingType;
     validate(value: any, context: Context, path?: string): Promise<void>[];
 }
 export interface IValidatorWrapper {

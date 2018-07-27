@@ -1,12 +1,12 @@
 import { BaseTypeValidator } from "../BaseTypeValidator";
-import { ContainingType, DF } from "../intefaces";
+import { DF } from "../contracts";
 import * as moment from "moment";
 import Context from "../Context";
 export default class DateValidator extends BaseTypeValidator {
     type: string;
     private _format;
-    constructor(format?: DF, parent?: ContainingType);
-    private parse(date);
+    constructor(format?: DF);
+    private parse;
     format(format: DF): this;
     before(limit: string): this;
     after(limit: string): this;

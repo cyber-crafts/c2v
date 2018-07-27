@@ -1,47 +1,47 @@
 {
-  "name": "c2v",
-  "version": "1.0.2",
-  "keywords": [
-    "validation",
-    "async",
-    "reusable",
-    "intuitive",
-    "conditional validation",
-    "typescript",
-    "javascript",
-    "expressive",
-    "cyber crafts"
-  ],
-  "description": "modular, extensible, intuitive and expressive - javascript validator",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/cyber-crafts/validate.git"
-  },
-  "main": "./lib/index",
-  "typings": "./lib/index",
-  "license": "MIT",
-  "scripts": {
-    "test": "jest --watch --coverage --config=jest.config.js",
-    "test:staged": "./node_modules/.bin/jest --forceExit",
-    "lib:generate": "rm -rf ./lib/* && tsc && git add ./lib/**",
-    "lint": "tslint -p tslint.json",
-    "start": "tsc --watch"
-  },
-  "pre-commit": [
-    "lint",
-    "lib:generate",
-    "test:staged"
-  ],
-  "dependencies": {
-    "json-pointer": "^0.6.0",
-    "lodash": "^4.17.5",
-    "moment": "^2.22.2"
-  },
-  "devDependencies": {
-    "@types/json-pointer": "^1.0.30",
-    "@types/lodash": "^4.14.107",
-    "@types/node": "^9.6.4",
-    "jest": "^22.4.3",
-    "pre-commit": "^1.2.2"
-  }
+    "name": "c2v",
+    "version": "1.0.2",
+    "description": "modular, extensible, intuitive and expressive - javascript validator",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/cyber-crafts/validate.git"
+    },
+    "main": "./lib/index",
+    "typings": "./lib/index",
+    "license": "MIT",
+    "scripts": {
+        "test": "jest --watch --coverage --config=jest.config.js",
+        "test:staged": "./node_modules/.bin/jest --forceExit",
+        "lib:generate": "rm -rf ./lib/* && tsc && git add ./lib/**",
+        "lint": "tslint -p tslint.json",
+        "start": "tsc --watch"
+    },
+    "pre-commit": [
+        "lint",
+        "lib:generate",
+        "test:staged"
+    ],
+    "dependencies": {
+        "json-pointer": "^0.6.0",
+        "lodash": "^4.17.5",
+        "moment": "^2.22.2"
+    },
+    "devDependencies": {
+        "@types/json-pointer": "^1.0.30",
+        "@types/lodash": "^4.14.107",
+        "@types/node": "^9.6.4",
+        "jest": "^22.4.3",
+        "pre-commit": "^1.2.2"
+    },
+    "keywords": [
+        "validation",
+        "async",
+        "reusable",
+        "intuitive",
+        "conditional validation",
+        "typescript",
+        "javascript",
+        "expressive",
+        "cyber crafts"
+    ]
 }

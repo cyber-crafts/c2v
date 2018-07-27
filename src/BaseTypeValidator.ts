@@ -1,17 +1,12 @@
 import { get, has } from "json-pointer"
-import { default as IValidationRule, ContainingType, IValidationResult, ITypeValidator } from "./intefaces"
+import { default as IValidationRule, IValidationResult, ITypeValidator } from "./contracts"
 import { isEqual } from "lodash"
 import Context from "./Context"
 
 export abstract class BaseTypeValidator implements ITypeValidator {
   protected validationRules: IValidationRule[] = []
-  protected readonly parent: ContainingType
 
   public abstract get type (): string
-
-  public constructor (parent: ContainingType = null) {
-    this.parent = parent
-  }
 
   /**
    * adds a new validator to the existing validators array
@@ -58,6 +53,7 @@ export abstract class BaseTypeValidator implements ITypeValidator {
    * @param obj {object} the whole object under validation
    * @param path {string = ""} the path to the property under validation
    * @param context
+   * @param data a parameter that provides additional data to be used for validation
    * @returns IValidationResult
    * */
   validate (obj: object, context: Context, path: string = ""): Promise<void>[] {
@@ -72,11 +68,5 @@ export abstract class BaseTypeValidator implements ITypeValidator {
       validatorPromises.push(validationRule(targetValue, obj, path, context))
     })
     return validatorPromises
-  }
-
-
-  // returns parent object
-  get _ (): ContainingType {
-    return this.parent
   }
 }
