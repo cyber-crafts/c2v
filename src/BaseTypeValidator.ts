@@ -1,7 +1,7 @@
-import { get, has } from "json-pointer"
-import { default as IValidationRule, IValidationResult, ITypeValidator } from "./contracts"
-import { isEqual } from "lodash"
-import Context from "./Context"
+import { get, has } from 'json-pointer'
+import { default as IValidationRule, ITypeValidator, IValidationResult } from './contracts'
+import { cloneDeep, isEqual } from 'lodash'
+import Context from './Context'
 
 export abstract class BaseTypeValidator implements ITypeValidator {
   protected validationRules: IValidationRule[] = []
@@ -28,7 +28,7 @@ export abstract class BaseTypeValidator implements ITypeValidator {
   in (...items: Array<any>) {
     this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!items.find((item) => isEqual(value, item))) {
-        context.addError(this.type + '.in', path, {items})
+        context.addError(this.type + '.in', path, { items })
       }
     })
     return this
@@ -39,10 +39,10 @@ export abstract class BaseTypeValidator implements ITypeValidator {
       if (has(obj, path)) {
         const container: any[] = get(obj, path)
         if (!Array.isArray(container) || !container.find(conValue => isEqual(value, conValue))) {
-          context.addError(this.type + '.on', dataPath, {path})
+          context.addError(this.type + '.on', dataPath, { path })
         }
       } else {
-        context.addError(this.type + '.on', dataPath, {path})
+        context.addError(this.type + '.on', dataPath, { path })
       }
     })
     return this
@@ -56,7 +56,9 @@ export abstract class BaseTypeValidator implements ITypeValidator {
    * @param data a parameter that provides additional data to be used for validation
    * @returns IValidationResult
    * */
-  validate (obj: object, context: Context, path: string = ""): Promise<void>[] {
+  validate (obj: object, context: Context, path: string = ''): Promise<void>[] {
+    obj = cloneDeep(obj)
+
     const validatorPromises: Promise<void>[] = []
     // if the object under validation does not exist return default result
     if (!has(obj, path)) return validatorPromises

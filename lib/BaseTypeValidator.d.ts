@@ -1,5 +1,5 @@
-import { default as IValidationRule, ITypeValidator } from "./contracts";
-import Context from "./Context";
+import { default as IValidationRule, ITypeValidator } from './contracts';
+import Context from './Context';
 export declare abstract class BaseTypeValidator implements ITypeValidator {
     protected validationRules: IValidationRule[];
     abstract readonly type: string;
