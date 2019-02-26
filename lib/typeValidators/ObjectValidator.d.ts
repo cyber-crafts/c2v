@@ -3,14 +3,17 @@ import { ITypeValidator, IValidatorWrapper } from '../contracts';
 import Context from '../Context';
 export default class ObjectValidator extends BaseTypeValidator {
     private requiredProps;
-    private typeValidators;
+    private keyValidators;
     constructor();
     readonly type: string;
     requires(...properties: string[]): this;
     requiresIfAny(conditionalProps: string[] | string, validationRules: IValidatorWrapper[] | IValidatorWrapper): this;
     requiresWithAny(conditionalProps: string[] | string, assertionPaths: string[] | string): this;
     requiresWithAll(conditionalProps: string[] | string, assertionProps: string[] | string): this;
-    addEntryValidator<T extends ITypeValidator>(name: string, validator: T): T;
+    addKey(name: string, validator: ITypeValidator): ITypeValidator;
+    hasKey(name: string): boolean;
+    getKeyRules(name: string): ITypeValidator;
+    dropKey(name: string): this;
     keys(validators: {
         [key: string]: ITypeValidator;
     }): this;

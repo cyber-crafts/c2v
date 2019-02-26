@@ -1,4 +1,4 @@
-import { BaseTypeValidator } from "../BaseTypeValidator";
+import { BaseTypeValidator } from '../BaseTypeValidator';
 export default class NumberValidator extends BaseTypeValidator {
     constructor(integer?: boolean);
     readonly type: string;

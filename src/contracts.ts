@@ -1,9 +1,9 @@
-import Context from "./Context"
+import Context from './Context'
 
 /**
  * the function that validates targeted value
  * @param value {any} the value under validation
- * @param obj {any} the parent object that holds the value
+ * @param obj {any} the root object under validation
  * @param path {string} the path to the value on the parent object
  * @param context {Context} state of validation to attach messages and errors
  * @return {Promise}
@@ -31,13 +31,14 @@ export interface IValidationResult {
 }
 
 export enum DF {
-  ISO8601 = "YYYY-MM-DD",
-  Unix = "unix",
-  Milliseconds = "milliseconds",
+  ISO8601 = 'YYYY-MM-DD',
+  Unix = 'unix',
+  Milliseconds = 'milliseconds',
 }
 
 export interface ITypeValidator {
   type: string
+
   validate (value: any, context: Context, path?: string): Promise<void>[]
 }
 

@@ -1,6 +1,6 @@
-import { get, has } from "json-pointer"
-import { ITypeValidator } from "../../contracts"
-import Context from "../../Context"
+import { get, has } from 'json-pointer'
+import { ITypeValidator } from '../../contracts'
+import Context from '../../Context'
 
 export default class AllItemsValidator {
   private typeValidator: ITypeValidator
