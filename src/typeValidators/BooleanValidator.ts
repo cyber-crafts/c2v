@@ -8,13 +8,13 @@ export default class BooleanValidator extends BaseTypeValidator {
   constructor () {
     super()
     // attaching type validator
-    this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+    this.addValidator('bool',async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!boolean.boolean()(value)) context.addError('boolean.boolean', path, {})
     })
   }
 
   isTrue () {
-    this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+    this.addValidator('isTrue',async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!boolean.isTrue()(value)) context.addError('boolean.true', path, {})
     })
     return this

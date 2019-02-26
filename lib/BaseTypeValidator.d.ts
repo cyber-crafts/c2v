@@ -1,18 +1,22 @@
 import { default as IValidationRule, ITypeValidator } from './contracts';
 import Context from './Context';
 export declare abstract class BaseTypeValidator implements ITypeValidator {
-    protected validationRules: IValidationRule[];
+    validationRules: {
+        [key: string]: IValidationRule;
+    };
     abstract readonly type: string;
     /**
-     * adds a new validator to the existing validators array
+     * adds a new validator to the validators set
      * @param validator {IValidationRule} the rule name
+     * @param name the name of validation rule
      * */
-    attach(validator: IValidationRule): this;
+    attach(validator: IValidationRule, name?: string): this;
     /**
-     * adds a new validator to the existing validators array
+     * adds a new validator to the validators set
+     * @param name the name of validation rule
      * @param validator {IValidationRule} the rule name
      * */
-    protected addValidator(validator: IValidationRule): void;
+    protected addValidator(name: string, validator: IValidationRule): void;
     in(...items: Array<any>): this;
     on(path: string): this;
     /**

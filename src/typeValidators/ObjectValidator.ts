@@ -13,7 +13,7 @@ export default class ObjectValidator extends BaseTypeValidator {
 
   constructor () {
     super()
-    this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+    this.addValidator('object', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (typeof value !== 'object') context.addError('object.object', path)
     })
   }
@@ -31,7 +31,7 @@ export default class ObjectValidator extends BaseTypeValidator {
     const conditionalProperties: string[] = (Array.isArray(conditionalProps)) ? conditionalProps : [ conditionalProps ]
     const validationWrappers: IValidatorWrapper[] = (Array.isArray(validationRules)) ? validationRules : [ validationRules ]
     conditionalProperties.forEach(conditionalProperty => {
-      this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+      this.addValidator('requiresIfAny', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         for (let i = 0; i < validationWrappers.length; i++) {
           const wrapper = validationWrappers[ i ]
 
@@ -71,7 +71,7 @@ export default class ObjectValidator extends BaseTypeValidator {
     const conditionalProperties: string[] = (Array.isArray(conditionalProps)) ? conditionalProps : [ conditionalProps ]
     const assertionProperties: string[] = (Array.isArray(assertionPaths)) ? assertionPaths : [ assertionPaths ]
     conditionalProperties.forEach(conditionalProperty => {
-      this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+      this.addValidator('requiresWithAny',async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         for (let i = 0; i < assertionProperties.length; i++)
           if (has(obj, assertionProperties[ i ]))
             if (!value.hasOwnProperty(conditionalProperty))
@@ -86,7 +86,7 @@ export default class ObjectValidator extends BaseTypeValidator {
     const assertionProperties: string[] = (Array.isArray(assertionProps)) ? assertionProps : [ assertionProps ]
 
     conditionalProperties.forEach(conditionalProperty => {
-      this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+      this.addValidator('requiresWithAll',async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         for (let i = 0; i < assertionProperties.length; i++) {
           if (!has(obj, assertionProperties[ i ])) return
         }

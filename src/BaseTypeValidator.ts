@@ -3,30 +3,34 @@ import { default as IValidationRule, ITypeValidator, IValidationResult } from '.
 import { cloneDeep, isEqual } from 'lodash'
 import Context from './Context'
 
+// todo: how to access nested fields/objects
 export abstract class BaseTypeValidator implements ITypeValidator {
-  protected validationRules: IValidationRule[] = []
+  public validationRules: { [ key: string ]: IValidationRule } = {}
 
   public abstract get type (): string
 
   /**
-   * adds a new validator to the existing validators array
+   * adds a new validator to the validators set
    * @param validator {IValidationRule} the rule name
+   * @param name the name of validation rule
    * */
-  attach (validator: IValidationRule) {
-    this.addValidator(validator)
+  attach (validator: IValidationRule, name?: string) {
+    name = name ? name : validator.name
+    this.addValidator(name, validator)
     return this
   }
 
   /**
-   * adds a new validator to the existing validators array
+   * adds a new validator to the validators set
+   * @param name the name of validation rule
    * @param validator {IValidationRule} the rule name
    * */
-  protected addValidator (validator: IValidationRule) {
-    this.validationRules.push(validator)
+  protected addValidator (name: string, validator: IValidationRule) {
+    this.validationRules[ name ] = validator
   }
 
   in (...items: Array<any>) {
-    this.addValidator(async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+    this.addValidator('in', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!items.find((item) => isEqual(value, item))) {
         context.addError(this.type + '.in', path, { items })
       }
@@ -35,7 +39,7 @@ export abstract class BaseTypeValidator implements ITypeValidator {
   }
 
   on (path: string) {
-    this.addValidator(async (value: any, obj: any, dataPath: string, context: Context): Promise<void> => {
+    this.addValidator('on', async (value: any, obj: any, dataPath: string, context: Context): Promise<void> => {
       if (has(obj, path)) {
         const container: any[] = get(obj, path)
         if (!Array.isArray(container) || !container.find(conValue => isEqual(value, conValue))) {
@@ -64,9 +68,9 @@ export abstract class BaseTypeValidator implements ITypeValidator {
     if (!has(obj, path)) return validatorPromises
 
     const targetValue = get(obj, path)
-    // loops over validators and build the validation result
 
-    this.validationRules.forEach(validationRule => {
+    // loops over validators and build the validation result
+    Object.values(this.validationRules).forEach(validationRule => {
       validatorPromises.push(validationRule(targetValue, obj, path, context))
     })
     return validatorPromises
