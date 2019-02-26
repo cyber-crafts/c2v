@@ -3,5 +3,5 @@ export default {
   integer: () => (value: number): boolean => Number.isInteger(value),
   min: (min: number, exclusive: boolean = false) => (value: number): boolean => (exclusive) ? value > min : value >= min,
   max: (max: number, exclusive: boolean = false) => (value: number): boolean => (exclusive) ? value < max : value <= max,
-  multipleOf: (modulus: number) => (value: number): boolean => value % modulus === 0
+  multipleOf: (modulus: number) => (value: number): boolean => value % modulus === 0,
 }

@@ -1,4 +1,4 @@
-import { get, has } from "json-pointer"
+import { get, has } from 'json-pointer'
 
 export const urlPattern: RegExp = /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
 export const emailPattern: RegExp = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
@@ -18,5 +18,5 @@ export default {
   confirmed: () => (value: string, obj: any, path: string): boolean => {
     const confirmPath = `${path}_confirmation`
     return (has(obj, path) && has(obj, confirmPath) && get(obj, path) === get(obj, confirmPath))
-  }
+  },
 }

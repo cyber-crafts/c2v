@@ -9,6 +9,7 @@ export declare abstract class BaseTypeValidator implements ITypeValidator {
      * adds a new validator to the validators set
      * @param validator {IValidationRule} the rule name
      * @param name the name of validation rule
+     * @deprecated will be removed in favor of addRule()
      * */
     attach(validator: IValidationRule, name?: string): this;
     /**
@@ -16,7 +17,17 @@ export declare abstract class BaseTypeValidator implements ITypeValidator {
      * @param name the name of validation rule
      * @param validator {IValidationRule} the rule name
      * */
-    protected addValidator(name: string, validator: IValidationRule): void;
+    addRule(name: string, validator: IValidationRule): void;
+    /**
+     * removes a validationRule with specified name
+     * @param name the name of validation rule
+     * */
+    removeRule(name: string): void;
+    /**
+     * checks if a validationRule exists
+     * @param name the name of validation rule
+     * */
+    hasRule(name: string): boolean;
     in(...items: Array<any>): this;
     on(path: string): this;
     /**

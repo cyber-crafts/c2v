@@ -1,4 +1,4 @@
-import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from "./contracts";
+import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from './contracts';
 export default class Context {
     private static _container;
     private _state;

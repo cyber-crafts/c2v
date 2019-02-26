@@ -1,19 +1,17 @@
 import { BaseTypeValidator } from '../BaseTypeValidator'
 import { ITypeValidator, IValidatorWrapper } from '../contracts'
-import { get, has, set } from 'json-pointer'
+import { get, has, set, remove } from 'json-pointer'
 import Context from '../Context'
 import { sanitizePath } from '../utils'
 import { cloneDeep } from 'lodash'
 
-const getPath = (name: string): string => (name.charAt(0) === '/') ? name : '/' + name
-
 export default class ObjectValidator extends BaseTypeValidator {
   private requiredProps: string[] = []
-  private typeValidators: { [ path: string ]: ITypeValidator } = {}
+  private keyValidators: { [ path: string ]: ITypeValidator } = {}
 
   constructor () {
     super()
-    this.addValidator('object', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+    this.addRule('object', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (typeof value !== 'object') context.addError('object.object', path)
     })
   }
@@ -31,7 +29,7 @@ export default class ObjectValidator extends BaseTypeValidator {
     const conditionalProperties: string[] = (Array.isArray(conditionalProps)) ? conditionalProps : [ conditionalProps ]
     const validationWrappers: IValidatorWrapper[] = (Array.isArray(validationRules)) ? validationRules : [ validationRules ]
     conditionalProperties.forEach(conditionalProperty => {
-      this.addValidator('requiresIfAny', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+      this.addRule('requiresIfAny', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         for (let i = 0; i < validationWrappers.length; i++) {
           const wrapper = validationWrappers[ i ]
 
@@ -71,7 +69,7 @@ export default class ObjectValidator extends BaseTypeValidator {
     const conditionalProperties: string[] = (Array.isArray(conditionalProps)) ? conditionalProps : [ conditionalProps ]
     const assertionProperties: string[] = (Array.isArray(assertionPaths)) ? assertionPaths : [ assertionPaths ]
     conditionalProperties.forEach(conditionalProperty => {
-      this.addValidator('requiresWithAny',async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+      this.addRule('requiresWithAny', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         for (let i = 0; i < assertionProperties.length; i++)
           if (has(obj, assertionProperties[ i ]))
             if (!value.hasOwnProperty(conditionalProperty))
@@ -86,7 +84,7 @@ export default class ObjectValidator extends BaseTypeValidator {
     const assertionProperties: string[] = (Array.isArray(assertionProps)) ? assertionProps : [ assertionProps ]
 
     conditionalProperties.forEach(conditionalProperty => {
-      this.addValidator('requiresWithAll',async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+      this.addRule('requiresWithAll', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         for (let i = 0; i < assertionProperties.length; i++) {
           if (!has(obj, assertionProperties[ i ])) return
         }
@@ -99,15 +97,26 @@ export default class ObjectValidator extends BaseTypeValidator {
     return this
   }
 
-  addEntryValidator<T extends ITypeValidator> (name: string, validator: T): T {
-    const pointer = getPath(name)
-    if (has(this.typeValidators, pointer)) return get(this.typeValidators, pointer)
-    set(this.typeValidators, pointer, validator)
+  addKey (name: string, validator: ITypeValidator): ITypeValidator {
+    this.keyValidators[ name ] = validator
     return validator
   }
 
-  keys (validators: { [ key: string ]: ITypeValidator }) {
-    Object.keys(validators).forEach(key => this.addEntryValidator(key, validators[ key ]))
+  hasKey (name: string): boolean {
+    return this.keyValidators.hasOwnProperty(name)
+  }
+
+  getKeyRules (name: string): ITypeValidator {
+    return this.keyValidators[ name ]
+  }
+
+  dropKey (name: string): this {
+    delete this.keyValidators[ name ]
+    return this
+  }
+
+  keys (validators: { [ key: string ]: ITypeValidator }): this {
+    Object.keys(validators).forEach(key => this.addKey(key, validators[ key ]))
     return this
   }
 
@@ -126,8 +135,8 @@ export default class ObjectValidator extends BaseTypeValidator {
     const superResult = super.validate(obj, context, path)
 
     let propertiesResults: Promise<void>[] = []
-    Object.keys(this.typeValidators).forEach(propertyName => {
-      const typeValidator = this.typeValidators[ propertyName ]
+    Object.keys(this.keyValidators).forEach(propertyName => {
+      const typeValidator = this.keyValidators[ propertyName ]
       const propertyPath = [ path, propertyName ].join('/')
       if (has(obj, propertyPath) && get(obj, propertyPath) !== null) {
         propertiesResults = propertiesResults.concat(typeValidator.validate(obj, context, propertyPath))

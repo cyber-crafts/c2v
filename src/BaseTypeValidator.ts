@@ -3,7 +3,6 @@ import { default as IValidationRule, ITypeValidator, IValidationResult } from '.
 import { cloneDeep, isEqual } from 'lodash'
 import Context from './Context'
 
-// todo: how to access nested fields/objects
 export abstract class BaseTypeValidator implements ITypeValidator {
   public validationRules: { [ key: string ]: IValidationRule } = {}
 
@@ -13,10 +12,11 @@ export abstract class BaseTypeValidator implements ITypeValidator {
    * adds a new validator to the validators set
    * @param validator {IValidationRule} the rule name
    * @param name the name of validation rule
+   * @deprecated will be removed in favor of addRule()
    * */
   attach (validator: IValidationRule, name?: string) {
     name = name ? name : validator.name
-    this.addValidator(name, validator)
+    this.addRule(name, validator)
     return this
   }
 
@@ -25,12 +25,28 @@ export abstract class BaseTypeValidator implements ITypeValidator {
    * @param name the name of validation rule
    * @param validator {IValidationRule} the rule name
    * */
-  protected addValidator (name: string, validator: IValidationRule) {
+  public addRule (name: string, validator: IValidationRule) {
     this.validationRules[ name ] = validator
   }
 
+  /**
+   * removes a validationRule with specified name
+   * @param name the name of validation rule
+   * */
+  public removeRule (name: string) {
+    delete this.validationRules[ name ]
+  }
+
+  /**
+   * checks if a validationRule exists
+   * @param name the name of validation rule
+   * */
+  public hasRule (name: string) {
+    return this.validationRules.hasOwnProperty(name)
+  }
+
   in (...items: Array<any>) {
-    this.addValidator('in', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+    this.addRule('in', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!items.find((item) => isEqual(value, item))) {
         context.addError(this.type + '.in', path, { items })
       }
@@ -39,7 +55,7 @@ export abstract class BaseTypeValidator implements ITypeValidator {
   }
 
   on (path: string) {
-    this.addValidator('on', async (value: any, obj: any, dataPath: string, context: Context): Promise<void> => {
+    this.addRule('on', async (value: any, obj: any, dataPath: string, context: Context): Promise<void> => {
       if (has(obj, path)) {
         const container: any[] = get(obj, path)
         if (!Array.isArray(container) || !container.find(conValue => isEqual(value, conValue))) {

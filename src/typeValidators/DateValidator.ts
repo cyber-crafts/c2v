@@ -26,7 +26,7 @@ export default class DateValidator extends BaseTypeValidator {
   }
 
   before (limit: string) {
-    this.addValidator('before', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+    this.addRule('before', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!date.before(this.parse(limit))(value))
         context.addError('date.before', path, { limit })
     })
@@ -34,7 +34,7 @@ export default class DateValidator extends BaseTypeValidator {
   }
 
   after (limit: string) {
-    this.addValidator('after', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+    this.addRule('after', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!date.after(this.parse(limit))(value))
         context.addError('date.after', path, { limit })
     })
@@ -42,7 +42,7 @@ export default class DateValidator extends BaseTypeValidator {
   }
 
   closerThanFromNow (amount: number, unit: moment.unitOfTime.Base) {
-    this.addValidator('closerThanFromNow', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+    this.addRule('closerThanFromNow', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!date.closerThanFromNow(amount, unit)(value))
         context.addError('date.closerThanFromNow', path, { amount, unit })
     })
@@ -50,7 +50,7 @@ export default class DateValidator extends BaseTypeValidator {
   }
 
   furtherThanFromNow (amount: number, unit: moment.unitOfTime.Base) {
-    this.addValidator('furtherThanFromNow', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+    this.addRule('furtherThanFromNow', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
       if (!date.furtherThanFromNow(amount, unit)(value))
         context.addError('date.furtherThanFromNow', path, { amount, unit })
     })

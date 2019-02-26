@@ -1,9 +1,9 @@
-import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from "./contracts"
-import { merge } from "lodash"
+import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from './contracts'
+import { merge } from 'lodash'
 
 export default class Context {
   private static _container: any = {}
-  private _state: IValidationResult = {success: true, messages: [], errors: []}
+  private _state: IValidationResult = { success: true, messages: [], errors: [] }
   private _data: any = {}
 
   public setData (data: any): this {
@@ -16,13 +16,13 @@ export default class Context {
   }
 
   static bind (name: string | symbol, value: any) {
-    this._container[name] = value
+    this._container[ name ] = value
   }
 
   static get (name: string | symbol) {
     if (!this._container.hasOwnProperty(name))
       throw new Error(`identifier ${name.toString()} is NOT found in context`)
-    return this._container[name]
+    return this._container[ name ]
   }
 
   get isValid (): boolean {
@@ -34,12 +34,12 @@ export default class Context {
   }
 
   addError (rule: string, dataPath: string, params: object = {}) {
-    this._state.errors.push({rule, dataPath, params})
+    this._state.errors.push({ rule, dataPath, params })
     this.invalidate()
   }
 
   addMessage (code: string, params: object = {}) {
-    this._state.messages.push({code, params})
+    this._state.messages.push({ code, params })
   }
 
   absorb (context: Context): void {
