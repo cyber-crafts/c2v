@@ -38,6 +38,16 @@ describe('object validator', () => {
     expect(result).toHaveProperty('errors.0.rule', 'array.maxItems')
   })
 
+  it('should get type validator by key', function () {
+    const ov = new ObjectValidator()
+    ov.keys({
+      'prop1': c2v.arr.maxItems(2),
+    })
+
+    const prop1Validator = ov.getKey('prop1')
+    expect(prop1Validator.type).toBe('array')
+  })
+
   it('should detect the existence of keys', () => {
     const ov = new ObjectValidator()
     ov.keys({'prop1': c2v.str})

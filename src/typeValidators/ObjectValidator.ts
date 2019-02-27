@@ -97,16 +97,16 @@ export default class ObjectValidator extends BaseTypeValidator {
     return this
   }
 
-  addKey (name: string, validator: ITypeValidator): ITypeValidator {
+  addKey (name: string, validator: ITypeValidator): this {
     this.keyValidators[ name ] = validator
-    return validator
+    return this
   }
 
   hasKey (name: string): boolean {
     return this.keyValidators.hasOwnProperty(name)
   }
 
-  getKeyRules (name: string): ITypeValidator {
+  getKey (name: string): ITypeValidator {
     return this.keyValidators[ name ]
   }
 

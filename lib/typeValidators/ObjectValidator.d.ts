@@ -10,9 +10,9 @@ export default class ObjectValidator extends BaseTypeValidator {
     requiresIfAny(conditionalProps: string[] | string, validationRules: IValidatorWrapper[] | IValidatorWrapper): this;
     requiresWithAny(conditionalProps: string[] | string, assertionPaths: string[] | string): this;
     requiresWithAll(conditionalProps: string[] | string, assertionProps: string[] | string): this;
-    addKey(name: string, validator: ITypeValidator): ITypeValidator;
+    addKey(name: string, validator: ITypeValidator): this;
     hasKey(name: string): boolean;
-    getKeyRules(name: string): ITypeValidator;
+    getKey(name: string): ITypeValidator;
     dropKey(name: string): this;
     keys(validators: {
         [key: string]: ITypeValidator;
