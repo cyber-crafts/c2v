@@ -1,6 +1,6 @@
 {
   "name": "c2v",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "description": "modular, extensible, intuitive and expressive - javascript validator",
   "repository": {
     "type": "git",
