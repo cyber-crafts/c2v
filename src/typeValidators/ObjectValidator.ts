@@ -1,6 +1,6 @@
 import { BaseTypeValidator } from '../BaseTypeValidator'
 import { ITypeValidator, IValidatorWrapper } from '../contracts'
-import { get, has, set, remove } from 'json-pointer'
+import { get, has } from 'json-pointer'
 import Context from '../Context'
 import { sanitizePath } from '../utils'
 import { cloneDeep } from 'lodash'
@@ -11,8 +11,11 @@ export default class ObjectValidator extends BaseTypeValidator {
 
   constructor () {
     super()
-    this.addRule('object', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (typeof value !== 'object') context.addError('object.object', path)
+    this.addRule({
+      name: 'object',
+      func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+        if (typeof value !== 'object') context.addError('object.object', path)
+      },
     })
   }
 
@@ -29,37 +32,40 @@ export default class ObjectValidator extends BaseTypeValidator {
     const conditionalProperties: string[] = (Array.isArray(conditionalProps)) ? conditionalProps : [ conditionalProps ]
     const validationWrappers: IValidatorWrapper[] = (Array.isArray(validationRules)) ? validationRules : [ validationRules ]
     conditionalProperties.forEach(conditionalProperty => {
-      this.addRule('requiresIfAny', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-        for (let i = 0; i < validationWrappers.length; i++) {
-          const wrapper = validationWrappers[ i ]
+      this.addRule({
+        name: 'requiresIfAny',
+        func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+          for (let i = 0; i < validationWrappers.length; i++) {
+            const wrapper = validationWrappers[ i ]
 
-          let conditionalObject: any = undefined
-          let isDataValidation = false
-          if (wrapper.path.substr(0, 1) === '$') {
-            conditionalObject = context.getData()
-            isDataValidation = true
-          } else {
-            conditionalObject = obj
-          }
+            let conditionalObject: any = undefined
+            let isDataValidation = false
+            if (wrapper.path.substr(0, 1) === '$') {
+              conditionalObject = context.getData()
+              isDataValidation = true
+            } else {
+              conditionalObject = obj
+            }
 
-          if (has(conditionalObject, sanitizePath(wrapper.path))) {
-            const _context = new Context().setData(context.getData())
-            await Promise.all(wrapper.validator.validate(conditionalObject, _context, sanitizePath(wrapper.path)))
-            // if context is clean then the `conditionalProperty` should exist
-            if (_context.isValid)
-              if (!has(value, `/${conditionalProperty}`)) {
-                const errorParams: any = {
-                  conditionalProperty,
-                  assertionProperties: wrapper.path,
+            if (has(conditionalObject, sanitizePath(wrapper.path))) {
+              const _context = new Context().setData(context.getData())
+              await Promise.all(wrapper.validator.validate(conditionalObject, _context, sanitizePath(wrapper.path)))
+              // if context is clean then the `conditionalProperty` should exist
+              if (_context.isValid)
+                if (!has(value, `/${conditionalProperty}`)) {
+                  const errorParams: any = {
+                    conditionalProperty,
+                    assertionProperties: wrapper.path,
+                  }
+                  if (isDataValidation) {
+                    errorParams.data = context.getData()
+                  }
+                  context.addError('object.requiresIfAny', path, errorParams)
                 }
-                if (isDataValidation) {
-                  errorParams.data = context.getData()
-                }
-                context.addError('object.requiresIfAny', path, errorParams)
-              }
-          }
+            }
 
-        }
+          }
+        },
       })
     })
     return this
@@ -69,11 +75,14 @@ export default class ObjectValidator extends BaseTypeValidator {
     const conditionalProperties: string[] = (Array.isArray(conditionalProps)) ? conditionalProps : [ conditionalProps ]
     const assertionProperties: string[] = (Array.isArray(assertionPaths)) ? assertionPaths : [ assertionPaths ]
     conditionalProperties.forEach(conditionalProperty => {
-      this.addRule('requiresWithAny', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-        for (let i = 0; i < assertionProperties.length; i++)
-          if (has(obj, assertionProperties[ i ]))
-            if (!value.hasOwnProperty(conditionalProperty))
-              context.addError('object.requiresWithAny', path, { conditionalProperty, assertionProperties })
+      this.addRule({
+        name: 'requiresWithAny',
+        func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+          for (let i = 0; i < assertionProperties.length; i++)
+            if (has(obj, assertionProperties[ i ]))
+              if (!value.hasOwnProperty(conditionalProperty))
+                context.addError('object.requiresWithAny', path, { conditionalProperty, assertionProperties })
+        },
       })
     })
     return this
@@ -84,13 +93,16 @@ export default class ObjectValidator extends BaseTypeValidator {
     const assertionProperties: string[] = (Array.isArray(assertionProps)) ? assertionProps : [ assertionProps ]
 
     conditionalProperties.forEach(conditionalProperty => {
-      this.addRule('requiresWithAll', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-        for (let i = 0; i < assertionProperties.length; i++) {
-          if (!has(obj, assertionProperties[ i ])) return
-        }
+      this.addRule({
+        name: 'requiresWithAll',
+        func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+          for (let i = 0; i < assertionProperties.length; i++) {
+            if (!has(obj, assertionProperties[ i ])) return
+          }
 
-        if (!value.hasOwnProperty(conditionalProperty))
-          context.addError('object.requiresWithAll', path, { conditionalProperty, assertionProperties })
+          if (!value.hasOwnProperty(conditionalProperty))
+            context.addError('object.requiresWithAll', path, { conditionalProperty, assertionProperties })
+        },
       })
     })
 

@@ -1,32 +1,31 @@
 import { get, has } from 'json-pointer'
-import { default as IValidationRule, ITypeValidator, IValidationResult } from './contracts'
+import IValidate, { IRule, ITypeValidator, IValidationResult } from './contracts'
 import { cloneDeep, isEqual } from 'lodash'
 import Context from './Context'
 
 export abstract class BaseTypeValidator implements ITypeValidator {
-  public validationRules: { [ key: string ]: IValidationRule } = {}
+  public validationRules: { [ key: string ]: IValidate } = {}
 
   public abstract get type (): string
 
   /**
-   * adds a new validator to the validators set
-   * @param validator {IValidationRule} the rule name
+   * adds a new rule to the validators set
+   * @param func {IValidate} the rule name
    * @param name the name of validation rule
    * @deprecated will be removed in favor of addRule()
    * */
-  attach (validator: IValidationRule, name?: string) {
-    name = name ? name : validator.name
-    this.addRule(name, validator)
+  attach (func: IValidate, name?: string) {
+    name = name ? name : func.name
+    this.addRule({ name, func })
     return this
   }
 
   /**
    * adds a new validator to the validators set
-   * @param name the name of validation rule
-   * @param validator {IValidationRule} the rule name
    * */
-  public addRule (name: string, validator: IValidationRule) {
-    this.validationRules[ name ] = validator
+  public addRule (rule: IRule): this {
+    this.validationRules[ rule.name ] = rule.func
+    return this
   }
 
   /**
@@ -46,24 +45,30 @@ export abstract class BaseTypeValidator implements ITypeValidator {
   }
 
   in (...items: Array<any>) {
-    this.addRule('in', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (!items.find((item) => isEqual(value, item))) {
-        context.addError(this.type + '.in', path, { items })
-      }
+    this.addRule({
+      name: 'in',
+      func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+        if (!items.find((item) => isEqual(value, item))) {
+          context.addError(this.type + '.in', path, { items })
+        }
+      },
     })
     return this
   }
 
   on (path: string) {
-    this.addRule('on', async (value: any, obj: any, dataPath: string, context: Context): Promise<void> => {
-      if (has(obj, path)) {
-        const container: any[] = get(obj, path)
-        if (!Array.isArray(container) || !container.find(conValue => isEqual(value, conValue))) {
+    this.addRule({
+      name: 'on',
+      func: async (value: any, obj: any, dataPath: string, context: Context): Promise<void> => {
+        if (has(obj, path)) {
+          const container: any[] = get(obj, path)
+          if (!Array.isArray(container) || !container.find(conValue => isEqual(value, conValue))) {
+            context.addError(this.type + '.on', dataPath, { path })
+          }
+        } else {
           context.addError(this.type + '.on', dataPath, { path })
         }
-      } else {
-        context.addError(this.type + '.on', dataPath, { path })
-      }
+      },
     })
     return this
   }

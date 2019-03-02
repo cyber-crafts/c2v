@@ -1,7 +1,8 @@
 import Context from './Context'
 
+
 /**
- * the function that validates targeted value
+ * the function used validate a certain value
  * @param value {any} the value under validation
  * @param obj {any} the root object under validation
  * @param path {string} the path to the value on the parent object
@@ -9,8 +10,14 @@ import Context from './Context'
  * @return {Promise}
  * return type was left
  * */
-export default interface IValidationRule {
+// todo: no need to be default export
+export default interface IValidate {
   (value: any, obj: any, path: string, context: Context): Promise<void>
+}
+
+export interface IRule {
+  name: string
+  func: IValidate
 }
 
 export interface IValidationError {

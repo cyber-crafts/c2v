@@ -26,33 +26,45 @@ export default class DateValidator extends BaseTypeValidator {
   }
 
   before (limit: string) {
-    this.addRule('before', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (!date.before(this.parse(limit))(value))
-        context.addError('date.before', path, { limit })
+    this.addRule({
+      name: 'before',
+      func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+        if (!date.before(this.parse(limit))(value))
+          context.addError('date.before', path, { limit })
+      },
     })
     return this
   }
 
   after (limit: string) {
-    this.addRule('after', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (!date.after(this.parse(limit))(value))
-        context.addError('date.after', path, { limit })
+    this.addRule({
+      name: 'after',
+      func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+        if (!date.after(this.parse(limit))(value))
+          context.addError('date.after', path, { limit })
+      },
     })
     return this
   }
 
   closerThanFromNow (amount: number, unit: moment.unitOfTime.Base) {
-    this.addRule('closerThanFromNow', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (!date.closerThanFromNow(amount, unit)(value))
-        context.addError('date.closerThanFromNow', path, { amount, unit })
+    this.addRule({
+      name: 'closerThanFromNow',
+      func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+        if (!date.closerThanFromNow(amount, unit)(value))
+          context.addError('date.closerThanFromNow', path, { amount, unit })
+      },
     })
     return this
   }
 
   furtherThanFromNow (amount: number, unit: moment.unitOfTime.Base) {
-    this.addRule('furtherThanFromNow', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (!date.furtherThanFromNow(amount, unit)(value))
-        context.addError('date.furtherThanFromNow', path, { amount, unit })
+    this.addRule({
+      name: 'furtherThanFromNow',
+      func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+        if (!date.furtherThanFromNow(amount, unit)(value))
+          context.addError('date.furtherThanFromNow', path, { amount, unit })
+      },
     })
     return this
   }

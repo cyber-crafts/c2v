@@ -16,15 +16,21 @@ export default class ArrayValidator extends BaseTypeValidator {
   }
 
   minItems (limit: number) {
-    this.addRule('minItems', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (value.length < limit) context.addError('array.minItems', path, { limit })
+    this.addRule({
+      name: 'minItems',
+      func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+        if (value.length < limit) context.addError('array.minItems', path, { limit })
+      },
     })
     return this
   }
 
   maxItems (limit: number) {
-    this.addRule('maxItems', async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-      if (value.length > limit) context.addError('array.maxItems', path, { limit })
+    this.addRule({
+      name: 'maxItems',
+      func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+        if (value.length > limit) context.addError('array.maxItems', path, { limit })
+      },
     })
     return this
   }
