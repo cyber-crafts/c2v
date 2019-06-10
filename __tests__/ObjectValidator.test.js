@@ -16,6 +16,19 @@ describe('object validator', () => {
     expect(result).toHaveProperty('errors.0.params.property', 's')
   })
 
+  it('should unrequire previously required fields', async () => {
+    const ov = new ObjectValidator()
+    ov.requires('t', 's')
+    const beforeResult = await Context.validate(ov, {t: 0})
+    expect(beforeResult).toHaveProperty('success', false)
+    expect(beforeResult).toHaveProperty('errors.0.dataPath', '')
+    expect(beforeResult).toHaveProperty('errors.0.params.property', 's')
+    ov.unrequire(['s'])
+    const afterResult = await Context.validate(ov, {t: 0})
+    expect(afterResult).toHaveProperty('success', true)
+
+  })
+
   it('should validate required props on nested objects', async () => {
     const ov = new ObjectValidator()
     ov.keys({

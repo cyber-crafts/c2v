@@ -127,6 +127,16 @@ export default class ObjectValidator extends BaseTypeValidator {
     return this
   }
 
+  unrequire (properties: string[]): this {
+    for (let property of properties) {
+      let index = this.requiredProps.indexOf(property)
+      if (index > -1) {
+        this.requiredProps.splice(index, 1)
+      }
+    }
+    return this
+  }
+
   keys (validators: { [ key: string ]: ITypeValidator }): this {
     Object.keys(validators).forEach(key => this.addKey(key, validators[ key ]))
     return this

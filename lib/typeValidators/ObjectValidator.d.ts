@@ -14,6 +14,7 @@ export default class ObjectValidator extends BaseTypeValidator {
     hasKey(name: string): boolean;
     getKey(name: string): ITypeValidator;
     dropKey(name: string): this;
+    unrequire(properties: string[]): this;
     keys(validators: {
         [key: string]: ITypeValidator;
     }): this;
