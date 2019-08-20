@@ -1,5 +1,5 @@
 import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from './contracts'
-import { merge } from 'lodash'
+import merge = require('lodash.merge')
 
 export default class Context {
   private static _container: any = {}

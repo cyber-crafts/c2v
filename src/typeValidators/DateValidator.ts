@@ -4,7 +4,7 @@ import { DF } from '../contracts'
 import * as moment from 'moment'
 import { date } from '../rules'
 import Context from '../Context'
-import { cloneDeep } from 'lodash'
+import cloneDeep = require('lodash.clonedeep')
 
 export default class DateValidator extends BaseTypeValidator {
   public type: string = 'date'

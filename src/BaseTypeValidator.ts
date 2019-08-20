@@ -1,6 +1,8 @@
 import { get, has } from 'json-pointer'
 import IValidate, { IRule, ITypeValidator, IValidationResult } from './contracts'
-import { cloneDeep, isEqual } from 'lodash'
+import cloneDeep = require('lodash.clonedeep')
+import isEqual = require('lodash.isequal')
+
 import Context from './Context'
 
 export abstract class BaseTypeValidator implements ITypeValidator {

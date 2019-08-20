@@ -4,7 +4,7 @@ import { ITypeValidator } from '../../contracts'
 import { has } from 'json-pointer'
 import SingleItemValidator from './SingleItemValidator'
 import Context from '../../Context'
-import { cloneDeep } from 'lodash'
+import cloneDeep = require('lodash.clonedeep')
 
 export default class ArrayValidator extends BaseTypeValidator {
   private readonly allItemsValidator: AllItemsValidator

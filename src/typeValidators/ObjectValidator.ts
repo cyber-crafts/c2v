@@ -3,7 +3,7 @@ import { ITypeValidator, IValidatorWrapper } from '../contracts'
 import { get, has } from 'json-pointer'
 import Context from '../Context'
 import { sanitizePath } from '../utils'
-import { cloneDeep } from 'lodash'
+import cloneDeep = require('lodash.clonedeep')
 
 export default class ObjectValidator extends BaseTypeValidator {
   private requiredProps: string[] = []
