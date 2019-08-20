@@ -22,6 +22,10 @@ export abstract class BaseTypeValidator implements ITypeValidator {
     return this
   }
 
+  clone () {
+    return cloneDeep(this)
+  }
+
   /**
    * adds a new validator to the validators set
    * */

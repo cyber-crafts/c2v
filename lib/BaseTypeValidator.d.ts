@@ -12,6 +12,7 @@ export declare abstract class BaseTypeValidator implements ITypeValidator {
      * @deprecated will be removed in favor of addRule()
      * */
     attach(func: IValidate, name?: string): this;
+    clone(): this;
     /**
      * adds a new validator to the validators set
      * */

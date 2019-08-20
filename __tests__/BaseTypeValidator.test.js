@@ -1,4 +1,6 @@
 const {BaseTypeValidator} = require('../lib/BaseTypeValidator')
+const { ObjectValidator } = require("../lib").validators
+const c2v = require('./../lib').default
 
 describe('BaseTypeValidator provides base functionality for type validators', () => {
 
@@ -15,5 +17,16 @@ describe('BaseTypeValidator provides base functionality for type validators', ()
     expect(x.validationRules).toHaveProperty('in')
     x.removeRule('in')
     expect(x.validationRules).not.toHaveProperty('in')
+  })
+
+  it('should clone a schema', () => {
+    const schema = new ObjectValidator()
+    schema.addKey('test1', c2v.str)
+    expect(schema.hasKey('test1')).toBe(true)
+    const cloned = schema.clone()
+    cloned.addKey('test2', c2v.str)
+    expect(schema.hasKey('test2')).toBe(false)
+    expect(cloned.hasKey('test2')).toBe(true)
+
   })
 })
