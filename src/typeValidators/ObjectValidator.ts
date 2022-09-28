@@ -1,9 +1,9 @@
-import { BaseTypeValidator } from '../BaseTypeValidator'
-import { ITypeValidator, IValidatorWrapper } from '../contracts'
-import { get, has } from 'json-pointer'
-import Context from '../Context'
-import { sanitizePath } from '../utils'
-import cloneDeep = require('lodash.clonedeep')
+import { BaseTypeValidator } from "../BaseTypeValidator"
+import { ITypeValidator, IValidatorWrapper } from "../contracts"
+import { get, has } from "json-pointer"
+import Context from "../Context"
+import { sanitizePath } from "../utils"
+import cloneDeep = require("lodash.clonedeep")
 
 export default class ObjectValidator extends BaseTypeValidator {
   private requiredProps: string[] = []
@@ -12,15 +12,15 @@ export default class ObjectValidator extends BaseTypeValidator {
   constructor () {
     super()
     this.addRule({
-      name: 'object',
+      name: "object",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-        if (typeof value !== 'object') context.addError('object.object', path)
+        if (typeof value !== "object") context.addError("object.object", path)
       },
     })
   }
 
   get type (): string {
-    return 'object'
+    return "object"
   }
 
   requires (...properties: string[]) {
@@ -33,14 +33,14 @@ export default class ObjectValidator extends BaseTypeValidator {
     const validationWrappers: IValidatorWrapper[] = (Array.isArray(validationRules)) ? validationRules : [ validationRules ]
     conditionalProperties.forEach(conditionalProperty => {
       this.addRule({
-        name: 'requiresIfAny',
+        name: "requiresIfAny",
         func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
           for (let i = 0; i < validationWrappers.length; i++) {
             const wrapper = validationWrappers[ i ]
 
             let conditionalObject: any = undefined
             let isDataValidation = false
-            if (wrapper.path.substr(0, 1) === '$') {
+            if (wrapper.path.substr(0, 1) === "$") {
               conditionalObject = context.getData()
               isDataValidation = true
             } else {
@@ -60,7 +60,7 @@ export default class ObjectValidator extends BaseTypeValidator {
                   if (isDataValidation) {
                     errorParams.data = context.getData()
                   }
-                  context.addError('object.requiresIfAny', path, errorParams)
+                  context.addError("object.requiresIfAny", path, errorParams)
                 }
             }
 
@@ -76,12 +76,12 @@ export default class ObjectValidator extends BaseTypeValidator {
     const assertionProperties: string[] = (Array.isArray(assertionPaths)) ? assertionPaths : [ assertionPaths ]
     conditionalProperties.forEach(conditionalProperty => {
       this.addRule({
-        name: 'requiresWithAny',
+        name: "requiresWithAny",
         func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
           for (let i = 0; i < assertionProperties.length; i++)
             if (has(obj, assertionProperties[ i ]))
-              if (!value.hasOwnProperty(conditionalProperty))
-                context.addError('object.requiresWithAny', path, { conditionalProperty, assertionProperties })
+              if (conditionalProperty in value)
+                context.addError("object.requiresWithAny", path, { conditionalProperty, assertionProperties })
         },
       })
     })
@@ -94,14 +94,14 @@ export default class ObjectValidator extends BaseTypeValidator {
 
     conditionalProperties.forEach(conditionalProperty => {
       this.addRule({
-        name: 'requiresWithAll',
+        name: "requiresWithAll",
         func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
           for (let i = 0; i < assertionProperties.length; i++) {
             if (!has(obj, assertionProperties[ i ])) return
           }
 
-          if (!value.hasOwnProperty(conditionalProperty))
-            context.addError('object.requiresWithAll', path, { conditionalProperty, assertionProperties })
+          if (conditionalProperty in value)
+            context.addError("object.requiresWithAll", path, { conditionalProperty, assertionProperties })
         },
       })
     })
@@ -115,7 +115,7 @@ export default class ObjectValidator extends BaseTypeValidator {
   }
 
   hasKey (name: string): boolean {
-    return this.keyValidators.hasOwnProperty(name)
+    return name in  this.keyValidators
   }
 
   getKey (name: string): ITypeValidator {
@@ -128,8 +128,8 @@ export default class ObjectValidator extends BaseTypeValidator {
   }
 
   unrequire (properties: string[]): this {
-    for (let property of properties) {
-      let index = this.requiredProps.indexOf(property)
+    for (const property of properties) {
+      const index = this.requiredProps.indexOf(property)
       if (index > -1) {
         this.requiredProps.splice(index, 1)
       }
@@ -143,14 +143,14 @@ export default class ObjectValidator extends BaseTypeValidator {
   }
 
   // add validation rule requires
-  validate (obj: any, context: Context, path: string = ''): Promise<void>[] {
-    let clone = cloneDeep(obj)
-    let results: Promise<void>[] = []
+  validate (obj: any, context: Context, path = ""): Promise<void>[] {
+    const clone = cloneDeep(obj)
+    const results: Promise<void>[] = []
 
     // checking required properties
     this.requiredProps.forEach(property => {
       if (!has(clone, `${path}/${property}`) || get(clone, `${path}/${property}`) === null) {
-        context.addError('object.requires', path, { property })
+        context.addError("object.requires", path, { property })
       }
     })
 
@@ -159,7 +159,7 @@ export default class ObjectValidator extends BaseTypeValidator {
     let propertiesResults: Promise<void>[] = []
     Object.keys(this.keyValidators).forEach(propertyName => {
       const typeValidator = this.keyValidators[ propertyName ]
-      const propertyPath = [ path, propertyName ].join('/')
+      const propertyPath = [ path, propertyName ].join("/")
       if (has(obj, propertyPath) && get(obj, propertyPath) !== null) {
         propertiesResults = propertiesResults.concat(typeValidator.validate(obj, context, propertyPath))
       }

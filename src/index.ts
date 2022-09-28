@@ -1,7 +1,7 @@
-import * as typeValidators from './typeValidators'
-import * as contracts from './contracts'
+import * as typeValidators from "./typeValidators"
+import * as contracts from "./contracts"
 
-export { default as Context } from './Context'
+export { default as Context } from "./Context"
 export const validators = typeValidators
 export { contracts }
 

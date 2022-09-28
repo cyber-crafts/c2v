@@ -1,5 +1,5 @@
-import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from './contracts'
-import merge = require('lodash.merge')
+import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from "./contracts"
+import merge = require("lodash.merge")
 
 export default class Context {
   private static _container: any = {}
@@ -20,7 +20,7 @@ export default class Context {
   }
 
   static get (name: string | symbol) {
-    if (!this._container.hasOwnProperty(name))
+    if (name in this._container)
       throw new Error(`identifier ${name.toString()} is NOT found in context`)
     return this._container[ name ]
   }

@@ -1,4 +1,4 @@
-import Context from './Context'
+import Context from "./Context"
 
 
 /**
@@ -38,9 +38,9 @@ export interface IValidationResult {
 }
 
 export enum DF {
-  ISO8601 = 'YYYY-MM-DD',
-  Unix = 'unix',
-  Milliseconds = 'milliseconds',
+  ISO8601 = "YYYY-MM-DD",
+  Unix = "unix",
+  Milliseconds = "milliseconds",
 }
 
 export interface ITypeValidator {
