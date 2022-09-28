@@ -4,6 +4,7 @@ import * as contracts from "./contracts"
 export { default as Context } from "./Context"
 export const validators = typeValidators
 export { contracts }
+export { BaseTypeValidator } from "./BaseTypeValidator"
 
 export default class {
   static get str () {
