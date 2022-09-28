@@ -20,9 +20,10 @@ export default class Context {
   }
 
   static get (name: string | symbol) {
-    if (name in this._container)
-      throw new Error(`identifier ${name.toString()} is NOT found in context`)
-    return this._container[ name ]
+    if (name in this._container){
+      return this._container[ name ]
+    }
+    throw new Error(`identifier ${name.toString()} is NOT found in context`)
   }
 
   get isValid (): boolean {

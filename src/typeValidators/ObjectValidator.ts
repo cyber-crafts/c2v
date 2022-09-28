@@ -80,8 +80,9 @@ export default class ObjectValidator extends BaseTypeValidator {
         func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
           for (let i = 0; i < assertionProperties.length; i++)
             if (has(obj, assertionProperties[ i ]))
-              if (conditionalProperty in value)
+              if (!(conditionalProperty in value)){
                 context.addError("object.requiresWithAny", path, { conditionalProperty, assertionProperties })
+              }
         },
       })
     })
@@ -99,9 +100,9 @@ export default class ObjectValidator extends BaseTypeValidator {
           for (let i = 0; i < assertionProperties.length; i++) {
             if (!has(obj, assertionProperties[ i ])) return
           }
-
-          if (conditionalProperty in value)
+          if (!(conditionalProperty in value)){
             context.addError("object.requiresWithAll", path, { conditionalProperty, assertionProperties })
+          }
         },
       })
     })

@@ -1,7 +1,7 @@
-const { default: c2v, Context } = require("../lib")
-const { StringValidator, ObjectValidator } = require("../lib/typeValidators")
+import c2v, { validators, Context} from "../src"
+const {ObjectValidator, StringValidator} = validators
 
-let sv
+let sv = new StringValidator()
 beforeEach(() => {
   sv = new StringValidator()
 })
