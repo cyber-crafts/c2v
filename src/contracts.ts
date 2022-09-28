@@ -46,7 +46,7 @@ export enum DF {
 export interface ITypeValidator {
   type: string
 
-  validate (value: any, context: Context, path?: string): Promise<void>[]
+  validate (value: unknown, context: Context, path?: string): Promise<void>[]
 }
 
 export interface IValidatorWrapper {

@@ -1,5 +1,5 @@
-import IValidate, { IRule, ITypeValidator } from './contracts';
-import Context from './Context';
+import IValidate, { IRule, ITypeValidator } from "./contracts";
+import Context from "./Context";
 export declare abstract class BaseTypeValidator implements ITypeValidator {
     validationRules: {
         [key: string]: IValidate;

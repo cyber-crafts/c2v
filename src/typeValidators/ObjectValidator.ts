@@ -40,7 +40,7 @@ export default class ObjectValidator extends BaseTypeValidator {
 
             let conditionalObject: any = undefined
             let isDataValidation = false
-            if (wrapper.path.substr(0, 1) === "$") {
+            if (wrapper.path.substring(0, 1) === "$") {
               conditionalObject = context.getData()
               isDataValidation = true
             } else {

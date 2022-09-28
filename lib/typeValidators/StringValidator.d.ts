@@ -1,4 +1,4 @@
-import { BaseTypeValidator } from '../BaseTypeValidator';
+import { BaseTypeValidator } from "../BaseTypeValidator";
 export default class StringValidator extends BaseTypeValidator {
     constructor();
     length(limit: number): this;

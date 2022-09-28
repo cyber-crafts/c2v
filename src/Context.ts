@@ -60,13 +60,13 @@ export default class Context {
     return this._state
   }
 
-  async validate (schema: ITypeValidator, obj: object, data?: any): Promise<IValidationResult> {
+  async validate (schema: ITypeValidator, obj: unknown, data?: unknown): Promise<IValidationResult> {
     this.setData(data)
     await Promise.all(schema.validate(obj, this))
     return this.state
   }
 
-  static async validate (schema: ITypeValidator, obj: object, data?: any): Promise<IValidationResult> {
+  static async validate (schema: ITypeValidator, obj: unknown, data?: unknown): Promise<IValidationResult> {
     const c = new Context()
     return await c.validate(schema, obj, data)
   }

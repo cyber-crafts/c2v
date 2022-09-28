@@ -1,8 +1,9 @@
-import * as typeValidators from './typeValidators';
-import * as contracts from './contracts';
-export { default as Context } from './Context';
+import * as typeValidators from "./typeValidators";
+import * as contracts from "./contracts";
+export { default as Context } from "./Context";
 export declare const validators: typeof typeValidators;
 export { contracts };
+export { BaseTypeValidator } from "./BaseTypeValidator";
 export default class {
     static get str(): typeValidators.StringValidator;
     static get int(): typeValidators.NumberValidator;

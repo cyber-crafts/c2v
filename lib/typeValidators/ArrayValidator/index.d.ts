@@ -1,6 +1,6 @@
-import { BaseTypeValidator } from '../../BaseTypeValidator';
-import { ITypeValidator } from '../../contracts';
-import Context from '../../Context';
+import { BaseTypeValidator } from "../../BaseTypeValidator";
+import { ITypeValidator } from "../../contracts";
+import Context from "../../Context";
 export default class ArrayValidator extends BaseTypeValidator {
     private readonly allItemsValidator;
     private readonly singleItemValidators;

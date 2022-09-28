@@ -1,4 +1,4 @@
-import moment from 'moment';
+import moment from "moment";
 declare const _default: {
     before: (limit: moment.Moment) => (value: moment.Moment) => boolean;
     after: (limit: moment.Moment) => (value: moment.Moment) => boolean;

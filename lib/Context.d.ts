@@ -1,4 +1,4 @@
-import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from './contracts';
+import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult } from "./contracts";
 export default class Context {
     private static _container;
     private _state;
@@ -15,6 +15,6 @@ export default class Context {
     get errors(): IValidationError[];
     get messages(): IValidationMessage[];
     get state(): IValidationResult;
-    validate(schema: ITypeValidator, obj: object, data?: any): Promise<IValidationResult>;
-    static validate(schema: ITypeValidator, obj: object, data?: any): Promise<IValidationResult>;
+    validate(schema: ITypeValidator, obj: unknown, data?: unknown): Promise<IValidationResult>;
+    static validate(schema: ITypeValidator, obj: unknown, data?: unknown): Promise<IValidationResult>;
 }
