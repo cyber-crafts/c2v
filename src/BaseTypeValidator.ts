@@ -50,10 +50,10 @@ export abstract class BaseTypeValidator implements ITypeValidator {
     return name in this.validationRules
   }
 
-  in (...items: Array<any>) {
+  in (...items: Array<unknown>) {
     this.addRule({
       name: "in",
-      func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+      func: async (value: unknown, obj: unknown, path: string, context: Context): Promise<void> => {
         if (!items.find((item) => isEqual(value, item))) {
           context.addError(this.type + ".in", path, { items })
         }
@@ -65,9 +65,9 @@ export abstract class BaseTypeValidator implements ITypeValidator {
   on (path: string) {
     this.addRule({
       name: "on",
-      func: async (value: any, obj: any, dataPath: string, context: Context): Promise<void> => {
+      func: async (value: unknown, obj: unknown, dataPath: string, context: Context): Promise<void> => {
         if (has(obj, path)) {
-          const container: any[] = get(obj, path)
+          const container: unknown[] = get(obj, path)
           if (!Array.isArray(container) || !container.find(conValue => isEqual(value, conValue))) {
             context.addError(this.type + ".on", dataPath, { path })
           }

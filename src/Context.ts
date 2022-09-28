@@ -2,11 +2,11 @@ import { ITypeValidator, IValidationError, IValidationMessage, IValidationResult
 import merge = require("lodash.merge")
 
 export default class Context {
-  private static _container: any = {}
+  private static _container: Record<string, unknown> = {}
   private _state: IValidationResult = { success: true, messages: [], errors: [] }
-  private _data: any = {}
+  private _data: unknown = {}
 
-  public setData (data: any): this {
+  public setData (data: unknown): this {
     this._data = merge(data, this.getData())
     return this
   }
@@ -15,11 +15,8 @@ export default class Context {
     return this._data
   }
 
-  static bind (name: string | symbol, value: any) {
-    this._container[ name ] = value
-  }
 
-  static get (name: string | symbol) {
+  static get (name: string) {
     if (name in this._container){
       return this._container[ name ]
     }
