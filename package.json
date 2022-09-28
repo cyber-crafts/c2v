@@ -14,8 +14,8 @@
     "test": "jest --coverage --forceExit",
     "lib:generate": "rm -rf ./lib/* && yarn build && git add ./lib/**",
     "build": "tsc --build",
-    "lint:fix": "eslint ./src --fix && eslint ./__tests__ --fix --ext ts",
-    "lint:check": "eslint ./src --fix-dry-run",
+    "lint:fix": "eslint ./src --fix && eslint ./__tests__ --fix",
+    "lint:check": "eslint ./src --fix-dry-run && eslint ./__tests__ --fix-dry-run",
     "start": "tsc --watch"
   },
   "dependencies": {
