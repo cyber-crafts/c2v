@@ -1,4 +1,4 @@
-import c2v , {validators, Context} from '../src'
+import c2v , {validators, Context} from "../src"
 const { ArrayValidator } = validators
 
 let av = new ArrayValidator() 

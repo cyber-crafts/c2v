@@ -1,15 +1,15 @@
-const { Context } = require("../lib");
-const { StringValidator } = require("../lib/typeValidators");
-const c2v = require("../lib").default;
+import c2v, {validators, Context}  from "../src"
+const { StringValidator } = validators
+
 
 
 describe("a full examples on how to use different validators", () => {
 
   it("should be able to attach rules", async () => {
-    const x = new StringValidator().maxLength(3);
-    const z = await Context.validate(x, "test");
-    expect(z).toHaveProperty("errors.0.rule", "string.maxLength");
-  });
+    const x = new StringValidator().maxLength(3)
+    const z = await Context.validate(x, "test")
+    expect(z).toHaveProperty("errors.0.rule", "string.maxLength")
+  })
 
   // it("should attach custom validators as needed", function () {
   //   const x = new StringValidator();
@@ -29,18 +29,18 @@ describe("a full examples on how to use different validators", () => {
           1: c2v.num.min(-90).max(90),
         }),
       }),
-    });
+    })
 
 
-    let result = await Context.validate(schema, {
+    const result = await Context.validate(schema, {
       address: "test",
       location: {
         type: "typo",
         coordinates: [181],
       },
-    });
+    })
 
-    expect(result).toHaveProperty("success", false);
-    expect(result).toHaveProperty("errors.0.rule", "string.in");
-  });
-});
+    expect(result).toHaveProperty("success", false)
+    expect(result).toHaveProperty("errors.0.rule", "string.in")
+  })
+})

@@ -15,7 +15,7 @@
     "test:staged": "./node_modules/.bin/jest --forceExit",
     "lib:generate": "rm -rf ./lib/* && yarn build && git add ./lib/**",
     "build": "tsc --build",
-    "lint:fix": "eslint ./src --fix",
+    "lint:fix": "eslint ./src --fix && eslint ./__tests__ --fix --ext ts",
     "lint:check": "eslint ./src --fix-dry-run",
     "start": "tsc --watch"
   },
