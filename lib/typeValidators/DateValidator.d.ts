@@ -1,6 +1,6 @@
 import { BaseTypeValidator } from '../BaseTypeValidator';
 import { DF } from '../contracts';
-import * as moment from 'moment';
+import moment from 'moment';
 import Context from '../Context';
 export default class DateValidator extends BaseTypeValidator {
     type: string;

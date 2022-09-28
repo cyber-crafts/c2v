@@ -5,7 +5,7 @@ export default class ObjectValidator extends BaseTypeValidator {
     private requiredProps;
     private keyValidators;
     constructor();
-    readonly type: string;
+    get type(): string;
     requires(...properties: string[]): this;
     requiresIfAny(conditionalProps: string[] | string, validationRules: IValidatorWrapper[] | IValidatorWrapper): this;
     requiresWithAny(conditionalProps: string[] | string, assertionPaths: string[] | string): this;

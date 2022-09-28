@@ -8,5 +8,5 @@ export default class StringValidator extends BaseTypeValidator {
     url(): this;
     email(): this;
     confirmed(): this;
-    readonly type: string;
+    get type(): string;
 }

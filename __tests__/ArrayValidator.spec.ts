@@ -1,8 +1,7 @@
-const c2v = require("../lib").default
-const { ArrayValidator } = require("../lib").validators
-const { Context } = require("../lib")
+import c2v , {validators, Context} from '../src'
+const { ArrayValidator } = validators
 
-let av
+let av = new ArrayValidator() 
 beforeEach(() => {
   av = new ArrayValidator()
 })

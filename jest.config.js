@@ -1,4 +1,6 @@
+/** @type {import('ts-jest').JestConfigWithTsJest} */
 module.exports = {
+  preset: 'ts-jest',
   testEnvironment: 'node',
-  testRegex: '/__tests__/.*(test|spec)\\.jsx?$'
-}
+  testRegex: '/__tests__/.*(test|spec)\\.[jt]sx?$'
+};

@@ -144,12 +144,12 @@ export default class ObjectValidator extends BaseTypeValidator {
 
   // add validation rule requires
   validate (obj: any, context: Context, path: string = ''): Promise<void>[] {
-    obj = cloneDeep(obj)
+    let clone = cloneDeep(obj)
     let results: Promise<void>[] = []
 
     // checking required properties
     this.requiredProps.forEach(property => {
-      if (!has(obj, `${path}/${property}`) || get(obj, `${path}/${property}`) === null) {
+      if (!has(clone, `${path}/${property}`) || get(clone, `${path}/${property}`) === null) {
         context.addError('object.requires', path, { property })
       }
     })

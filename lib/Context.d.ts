@@ -7,14 +7,14 @@ export default class Context {
     getData(): any;
     static bind(name: string | symbol, value: any): void;
     static get(name: string | symbol): any;
-    readonly isValid: boolean;
+    get isValid(): boolean;
     private invalidate;
     addError(rule: string, dataPath: string, params?: object): void;
     addMessage(code: string, params?: object): void;
     absorb(context: Context): void;
-    readonly errors: IValidationError[];
-    readonly messages: IValidationMessage[];
-    readonly state: IValidationResult;
+    get errors(): IValidationError[];
+    get messages(): IValidationMessage[];
+    get state(): IValidationResult;
     validate(schema: ITypeValidator, obj: object, data?: any): Promise<IValidationResult>;
     static validate(schema: ITypeValidator, obj: object, data?: any): Promise<IValidationResult>;
 }

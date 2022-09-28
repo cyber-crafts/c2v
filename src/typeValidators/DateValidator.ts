@@ -1,10 +1,10 @@
 import { BaseTypeValidator } from '../BaseTypeValidator'
 import { get, set } from 'json-pointer'
 import { DF } from '../contracts'
-import * as moment from 'moment'
+import moment from 'moment'
 import { date } from '../rules'
 import Context from '../Context'
-import cloneDeep = require('lodash.clonedeep')
+import cloneDeep from "lodash.clonedeep"
 
 export default class DateValidator extends BaseTypeValidator {
   public type: string = 'date'
