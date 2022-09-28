@@ -17,7 +17,7 @@ jobs:
       - run: yarn install
 
       - name: Jest Annotations & Coverage
-        uses: mattallty/jest-github-action@v1.0.3
+        uses: willcaul/jest-github-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

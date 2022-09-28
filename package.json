@@ -11,7 +11,7 @@
   "license": "MIT",
   "scripts": {
     "test:w": "yarn test --watch",
-    "test": "jest --coverage --forceExit",
+    "test": "jest --coverage --detectOpenHandles",
     "lib:generate": "rm -rf ./lib/* && yarn build && git add ./lib/**",
     "build": "tsc --build",
     "lint:fix": "eslint ./src --fix && eslint ./__tests__ --fix",
