@@ -1,9 +1,9 @@
 #This workflow does linting the ts files
-name: check-lint
+name: test
 on: [pull_request]
 
 jobs:
-  check-lint:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -16,4 +16,4 @@ jobs:
 
       - run: yarn install
 
-      - run: yarn lint:check
+      - run: yarn test
