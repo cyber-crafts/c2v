@@ -1,6 +1,6 @@
-import { BaseTypeValidator } from '../../BaseTypeValidator';
-import { ITypeValidator } from '../../contracts';
-import Context from '../../Context';
+import { BaseTypeValidator } from "../../BaseTypeValidator";
+import { ITypeValidator } from "../../contracts";
+import Context from "../../Context";
 export default class ArrayValidator extends BaseTypeValidator {
     private readonly allItemsValidator;
     private readonly singleItemValidators;
@@ -11,6 +11,6 @@ export default class ArrayValidator extends BaseTypeValidator {
     items(validators: {
         [key: string]: ITypeValidator;
     }): this;
-    readonly type: string;
+    get type(): string;
     validate(value: any, context: Context, path?: string): Promise<void>[];
 }

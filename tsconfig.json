@@ -2,16 +2,16 @@
   "compilerOptions": {
     "outDir": "./lib",
     "rootDir": "./src",
+    "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
     "declaration": true,
-    "types": [],
+    "types": ["jest"],
     "lib": ["esnext","dom"],
     "moduleResolution": "node",
     "noImplicitAny": true,
     "module": "commonjs",
     "target": "es5",
-    "allowSyntheticDefaultImports": true
   },
   "exclude": [
     "./__tests__/",

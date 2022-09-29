@@ -1,4 +1,4 @@
-import * as moment from 'moment'
+import moment from "moment"
 
 export default {
   before: (limit: moment.Moment) => (value: moment.Moment): boolean => value.isBefore(limit),

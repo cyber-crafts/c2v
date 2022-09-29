@@ -1,4 +1,4 @@
-import Context from './Context'
+import Context from "./Context"
 
 
 /**
@@ -10,9 +10,8 @@ import Context from './Context'
  * @return {Promise}
  * return type was left
  * */
-// todo: no need to be default export
-export default interface IValidate {
-  (value: any, obj: any, path: string, context: Context): Promise<void>
+export interface IValidate {
+  (value: unknown, obj: unknown, path: string, context: Context): Promise<void>
 }
 
 export interface IRule {
@@ -38,15 +37,15 @@ export interface IValidationResult {
 }
 
 export enum DF {
-  ISO8601 = 'YYYY-MM-DD',
-  Unix = 'unix',
-  Milliseconds = 'milliseconds',
+  ISO8601 = "YYYY-MM-DD",
+  Unix = "unix",
+  Milliseconds = "milliseconds",
 }
 
 export interface ITypeValidator {
   type: string
 
-  validate (value: any, context: Context, path?: string): Promise<void>[]
+  validate (value: unknown, context: Context, path?: string): Promise<void>[]
 }
 
 export interface IValidatorWrapper {

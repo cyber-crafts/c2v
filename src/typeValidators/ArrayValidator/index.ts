@@ -1,25 +1,25 @@
-import { BaseTypeValidator } from '../../BaseTypeValidator'
-import AllItemsValidator from './AllItemsValidator'
-import { ITypeValidator } from '../../contracts'
-import { has } from 'json-pointer'
-import SingleItemValidator from './SingleItemValidator'
-import Context from '../../Context'
-import cloneDeep = require('lodash.clonedeep')
+import { BaseTypeValidator } from "../../BaseTypeValidator"
+import AllItemsValidator from "./AllItemsValidator"
+import { ITypeValidator } from "../../contracts"
+import { has } from "json-pointer"
+import SingleItemValidator from "./SingleItemValidator"
+import Context from "../../Context"
+import cloneDeep from "lodash.clonedeep"
 
 export default class ArrayValidator extends BaseTypeValidator {
   private readonly allItemsValidator: AllItemsValidator
   private readonly singleItemValidators: SingleItemValidator[] = []
 
-  constructor (path: string = '') {
+  constructor (path = "") {
     super()
     this.allItemsValidator = new AllItemsValidator()
   }
 
   minItems (limit: number) {
     this.addRule({
-      name: 'minItems',
+      name: "minItems",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-        if (value.length < limit) context.addError('array.minItems', path, { limit })
+        if (value.length < limit) context.addError("array.minItems", path, { limit })
       },
     })
     return this
@@ -27,9 +27,9 @@ export default class ArrayValidator extends BaseTypeValidator {
 
   maxItems (limit: number) {
     this.addRule({
-      name: 'maxItems',
+      name: "maxItems",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-        if (value.length > limit) context.addError('array.maxItems', path, { limit })
+        if (value.length > limit) context.addError("array.maxItems", path, { limit })
       },
     })
     return this
@@ -46,7 +46,7 @@ export default class ArrayValidator extends BaseTypeValidator {
         const siv = new SingleItemValidator(Number(key))
         this.singleItemValidators.push(siv)
         siv.setValidator(validators[ key ])
-      } else if (key === '*') {
+      } else if (key === "*") {
         this.allItemsValidator.setTypeValidator(validators[ key ])
       }
     })
@@ -54,10 +54,10 @@ export default class ArrayValidator extends BaseTypeValidator {
   }
 
   get type (): string {
-    return 'array'
+    return "array"
   }
 
-  validate (value: any, context: Context, path: string = ''): Promise<void>[] {
+  validate (value: any, context: Context, path = ""): Promise<void>[] {
     value = cloneDeep(value)
 
     let results = super.validate(value, context, path)

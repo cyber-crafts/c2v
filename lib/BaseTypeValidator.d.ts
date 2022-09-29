@@ -1,10 +1,10 @@
-import IValidate, { IRule, ITypeValidator } from './contracts';
-import Context from './Context';
+import IValidate, { IRule, ITypeValidator } from "./contracts";
+import Context from "./Context";
 export declare abstract class BaseTypeValidator implements ITypeValidator {
     validationRules: {
         [key: string]: IValidate;
     };
-    abstract readonly type: string;
+    abstract get type(): string;
     /**
      * adds a new rule to the validators set
      * @param func {IValidate} the rule name

@@ -1,25 +1,25 @@
-import { BaseTypeValidator } from '../BaseTypeValidator'
-import { string } from '../rules'
-import Context from '../Context'
+import { BaseTypeValidator } from "../BaseTypeValidator"
+import { string } from "../rules"
+import Context from "../Context"
 
 export default class StringValidator extends BaseTypeValidator {
 
   constructor () {
     super()
     this.addRule({
-      name: 'string',
+      name: "string",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
-        if (typeof value !== 'string') context.addError('string.string', path)
+        if (typeof value !== "string") context.addError("string.string", path)
       },
     })
   }
 
   length (limit: number) {
     this.addRule({
-      name: 'length',
+      name: "length",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         if (!string.length(limit)(value))
-          context.addError('string.length', path, { limit })
+          context.addError("string.length", path, { limit })
       },
     })
     return this
@@ -27,10 +27,10 @@ export default class StringValidator extends BaseTypeValidator {
 
   minLength (limit: number) {
     this.addRule({
-      name: 'minLength',
+      name: "minLength",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         if (!string.minLength(limit)(value))
-          context.addError('string.minLength', path, { limit })
+          context.addError("string.minLength", path, { limit })
       },
     })
     return this
@@ -38,10 +38,10 @@ export default class StringValidator extends BaseTypeValidator {
 
   maxLength (limit: number) {
     this.addRule({
-      name: 'maxLength',
+      name: "maxLength",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         if (!string.maxLength(limit)(value))
-          context.addError('string.maxLength', path, { limit })
+          context.addError("string.maxLength", path, { limit })
       },
     })
     return this
@@ -49,10 +49,10 @@ export default class StringValidator extends BaseTypeValidator {
 
   matches (pattern: RegExp) {
     this.addRule({
-      name: 'matches',
+      name: "matches",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         if (!string.matches(pattern)(value))
-          context.addError('string.matches', path, { pattern: pattern.toString() })
+          context.addError("string.matches", path, { pattern: pattern.toString() })
       },
     })
     return this
@@ -61,10 +61,10 @@ export default class StringValidator extends BaseTypeValidator {
 
   url () {
     this.addRule({
-      name: 'url',
+      name: "url",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         if (!string.url()(value))
-          context.addError('string.url', path, {})
+          context.addError("string.url", path, {})
       },
     })
     return this
@@ -72,10 +72,10 @@ export default class StringValidator extends BaseTypeValidator {
 
   email () {
     this.addRule({
-      name: 'email',
+      name: "email",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         if (!string.email()(value))
-          context.addError('string.email', path, {})
+          context.addError("string.email", path, {})
       },
     })
     return this
@@ -83,17 +83,17 @@ export default class StringValidator extends BaseTypeValidator {
 
   confirmed () {
     this.addRule({
-      name: 'confirmed',
+      name: "confirmed",
       func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
         if (!string.confirmed()(value, obj, path))
-          context.addError('string.confirmed', path, {})
+          context.addError("string.confirmed", path, {})
       },
     })
     return this
   }
 
   get type (): string {
-    return 'string'
+    return "string"
   }
 }
 

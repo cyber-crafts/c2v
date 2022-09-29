@@ -1,0 +1,21 @@
+#This workflow does typechecking on all codebase
+name: check-build
+on: [pull_request]
+
+jobs:
+  check-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - name: Install Dependencies
+        run: yarn
+
+      - name: Build
+        run: yarn build

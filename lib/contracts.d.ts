@@ -1,4 +1,4 @@
-import Context from './Context';
+import Context from "./Context";
 /**
  * the function used validate a certain value
  * @param value {any} the value under validation
@@ -36,7 +36,7 @@ export declare enum DF {
 }
 export interface ITypeValidator {
     type: string;
-    validate(value: any, context: Context, path?: string): Promise<void>[];
+    validate(value: unknown, context: Context, path?: string): Promise<void>[];
 }
 export interface IValidatorWrapper {
     validator: ITypeValidator;

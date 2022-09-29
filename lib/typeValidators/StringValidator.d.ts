@@ -1,4 +1,4 @@
-import { BaseTypeValidator } from '../BaseTypeValidator';
+import { BaseTypeValidator } from "../BaseTypeValidator";
 export default class StringValidator extends BaseTypeValidator {
     constructor();
     length(limit: number): this;
@@ -8,5 +8,5 @@ export default class StringValidator extends BaseTypeValidator {
     url(): this;
     email(): this;
     confirmed(): this;
-    readonly type: string;
+    get type(): string;
 }

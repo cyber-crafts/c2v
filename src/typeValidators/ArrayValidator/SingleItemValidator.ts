@@ -1,6 +1,6 @@
-import { has } from 'json-pointer'
-import { ITypeValidator } from '../../contracts'
-import Context from '../../Context'
+import { has } from "json-pointer"
+import { ITypeValidator } from "../../contracts"
+import Context from "../../Context"
 
 export default class SingleItemValidator {
   private readonly index: number
@@ -14,7 +14,7 @@ export default class SingleItemValidator {
     this.typeValidator = validator
   }
 
-  validate (value: any, path: string, context: Context): Promise<void>[] {
+  validate (value: unknown, path: string, context: Context): Promise<void>[] {
     let results: Promise<void>[] = []
     const dataPath = `${path}/${this.index}`
     if (!has(value, path) || !has(value, dataPath)) return results

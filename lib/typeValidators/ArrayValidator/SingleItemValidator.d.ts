@@ -1,5 +1,5 @@
-import { ITypeValidator } from '../../contracts';
-import Context from '../../Context';
+import { ITypeValidator } from "../../contracts";
+import Context from "../../Context";
 export default class SingleItemValidator {
     private readonly index;
     typeValidator: ITypeValidator;

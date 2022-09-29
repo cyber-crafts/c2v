@@ -1,0 +1,19 @@
+#This workflow does linting the ts files
+name: check-lint
+on: [pull_request]
+
+jobs:
+  check-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v3.4.1
+        with:
+          node-version-file: .nvmrc
+          cache: yarn
+
+      - run: yarn install
+
+      - run: yarn lint:check

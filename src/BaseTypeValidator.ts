@@ -1,9 +1,9 @@
-import { get, has } from 'json-pointer'
-import IValidate, { IRule, ITypeValidator, IValidationResult } from './contracts'
-import cloneDeep = require('lodash.clonedeep')
-import isEqual = require('lodash.isequal')
+import { get, has } from "json-pointer"
+import { IValidate, IRule, ITypeValidator, IValidationResult } from "./contracts"
+import cloneDeep = require("lodash.clonedeep")
+import isEqual = require("lodash.isequal")
 
-import Context from './Context'
+import Context from "./Context"
 
 export abstract class BaseTypeValidator implements ITypeValidator {
   public validationRules: { [ key: string ]: IValidate } = {}
@@ -47,32 +47,40 @@ export abstract class BaseTypeValidator implements ITypeValidator {
    * @param name the name of validation rule
    * */
   public hasRule (name: string) {
-    return this.validationRules.hasOwnProperty(name)
+    return name in this.validationRules
   }
 
-  in (...items: Array<any>) {
+  in (...items: Array<unknown>) {
     this.addRule({
-      name: 'in',
-      func: async (value: any, obj: any, path: string, context: Context): Promise<void> => {
+      name: "in",
+      func: async (value: unknown, obj: unknown, path: string, context: Context): Promise<void> => {
         if (!items.find((item) => isEqual(value, item))) {
-          context.addError(this.type + '.in', path, { items })
+          context.addError(this.type + ".in", path, { items })
         }
       },
     })
     return this
   }
 
+  /**
+   * checks if the value under check exists _`on`_ another array field (same as _`in`_ but with path reference to the array)
+   * @example
+   * // this means that the value of key `abc` can be found `on` path `/xyz`
+   * schema.keys({
+   *   "abc": c2v.str.on("/xyz")
+   * })
+   */
   on (path: string) {
     this.addRule({
-      name: 'on',
-      func: async (value: any, obj: any, dataPath: string, context: Context): Promise<void> => {
+      name: "on",
+      func: async (value: unknown, obj: unknown, dataPath: string, context: Context): Promise<void> => {
         if (has(obj, path)) {
-          const container: any[] = get(obj, path)
+          const container: unknown[] = get(obj, path)
           if (!Array.isArray(container) || !container.find(conValue => isEqual(value, conValue))) {
-            context.addError(this.type + '.on', dataPath, { path })
+            context.addError(this.type + ".on", dataPath, { path })
           }
         } else {
-          context.addError(this.type + '.on', dataPath, { path })
+          context.addError(this.type + ".on", dataPath, { path })
         }
       },
     })
@@ -87,7 +95,7 @@ export abstract class BaseTypeValidator implements ITypeValidator {
    * @param data a parameter that provides additional data to be used for validation
    * @returns IValidationResult
    * */
-  validate (obj: object, context: Context, path: string = ''): Promise<void>[] {
+  validate (obj: unknown, context: Context, path = ""): Promise<void>[] {
     obj = cloneDeep(obj)
 
     const validatorPromises: Promise<void>[] = []
