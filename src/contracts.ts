@@ -10,9 +10,8 @@ import Context from "./Context"
  * @return {Promise}
  * return type was left
  * */
-// todo: no need to be default export
-export default interface IValidate {
-  (value: any, obj: any, path: string, context: Context): Promise<void>
+export interface IValidate {
+  (value: unknown, obj: unknown, path: string, context: Context): Promise<void>
 }
 
 export interface IRule {

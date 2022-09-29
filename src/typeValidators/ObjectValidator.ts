@@ -144,7 +144,7 @@ export default class ObjectValidator extends BaseTypeValidator {
   }
 
   // add validation rule requires
-  validate (obj: any, context: Context, path = ""): Promise<void>[] {
+  validate (obj: unknown, context: Context, path = ""): Promise<void>[] {
     const clone = cloneDeep(obj)
     const results: Promise<void>[] = []
 

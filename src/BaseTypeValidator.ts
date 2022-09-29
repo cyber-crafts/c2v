@@ -1,5 +1,5 @@
 import { get, has } from "json-pointer"
-import IValidate, { IRule, ITypeValidator, IValidationResult } from "./contracts"
+import { IValidate, IRule, ITypeValidator, IValidationResult } from "./contracts"
 import cloneDeep = require("lodash.clonedeep")
 import isEqual = require("lodash.isequal")
 
@@ -62,6 +62,14 @@ export abstract class BaseTypeValidator implements ITypeValidator {
     return this
   }
 
+  /**
+   * checks if the value under check exists _`on`_ another array field (same as _`in`_ but with path reference to the array)
+   * @example
+   * // this means that the value of key `abc` can be found `on` path `/xyz`
+   * schema.keys({
+   *   "abc": c2v.str.on("/xyz")
+   * })
+   */
   on (path: string) {
     this.addRule({
       name: "on",
@@ -87,7 +95,7 @@ export abstract class BaseTypeValidator implements ITypeValidator {
    * @param data a parameter that provides additional data to be used for validation
    * @returns IValidationResult
    * */
-  validate (obj: object, context: Context, path = ""): Promise<void>[] {
+  validate (obj: unknown, context: Context, path = ""): Promise<void>[] {
     obj = cloneDeep(obj)
 
     const validatorPromises: Promise<void>[] = []

@@ -1,4 +1,4 @@
-import c2v, { BaseTypeValidator as Base, validators } from "../src" 
+import c2v, { BaseTypeValidator as Base, Context, validators } from "../src" 
 const { ObjectValidator } = validators
 
 class BaseTypeValidator extends Base {
@@ -31,6 +31,15 @@ describe("BaseTypeValidator provides base functionality for type validators", ()
     cloned.addKey("test2", c2v.str)
     expect(schema.hasKey("test2")).toBe(false)
     expect(cloned.hasKey("test2")).toBe(true)
+  })
 
+  it("checks if the value under check exists 'on' another array field", async () => {
+    const schema = new ObjectValidator()
+    schema.keys({
+      // this means that the value of key `abc` can be found `on` path `/xyz`
+      "abc": c2v.str.on("/xyz")
+    })
+    const res = await Context.validate(schema, {"abc": "value", xyz: ["value"]})
+    expect(res).toHaveProperty("success", true)
   })
 })
